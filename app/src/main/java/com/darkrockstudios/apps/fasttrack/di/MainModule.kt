@@ -44,7 +44,7 @@ val mainModule = module {
 			get(),
 			AppDatabase::class.java,
 			"app-database"
-		).addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_2_3).build()
+		).addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_2_3, AppDatabase.MIGRATION_3_4).build()
 	}
 
 	single { Clock.System } bind Clock::class

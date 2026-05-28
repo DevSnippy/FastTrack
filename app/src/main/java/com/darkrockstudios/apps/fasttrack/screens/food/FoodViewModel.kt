@@ -31,9 +31,15 @@ class FoodViewModel(
 		}
 	}
 
-	override fun addEntry(description: String, timestamp: Long) {
+	override fun addEntry(description: String, timestamp: Long, calories: Int?) {
 		viewModelScope.launch(Dispatchers.IO) {
-			repository.addEntry(description, timestamp)
+			repository.addEntry(description, timestamp, calories)
+		}
+	}
+
+	override fun updateEntry(id: Int, description: String, timestamp: Long, calories: Int?) {
+		viewModelScope.launch(Dispatchers.IO) {
+			repository.updateEntry(id, description, timestamp, calories)
 		}
 	}
 
@@ -81,8 +87,10 @@ $itemLines
 		}
 	}
 
-	override fun showAddDialog() = _uiState.update { it.copy(showAddDialog = true) }
+	override fun showAddDialog() = _uiState.update { it.copy(showAddDialog = true, entryToEdit = null) }
 	override fun hideAddDialog() = _uiState.update { it.copy(showAddDialog = false) }
+	override fun showEditDialog(entry: FoodLogEntry) = _uiState.update { it.copy(entryToEdit = entry, showAddDialog = false) }
+	override fun hideEditDialog() = _uiState.update { it.copy(entryToEdit = null) }
 	override fun showPasteDialog() = _uiState.update { it.copy(showPasteDialog = true) }
 	override fun hidePasteDialog() = _uiState.update { it.copy(showPasteDialog = false) }
 }

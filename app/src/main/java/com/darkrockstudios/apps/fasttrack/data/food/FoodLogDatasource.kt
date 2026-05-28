@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface FoodLogDatasource {
 	fun loadAll(): Flow<List<FoodEntry>>
 	fun insert(entry: FoodEntry): Long
+	fun update(entry: FoodEntry): Int
 	fun deleteByUid(uid: Int): Int
 	fun updateCalories(uid: Int, calories: Int): Int
 }

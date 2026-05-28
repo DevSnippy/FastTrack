@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.darkrockstudios.apps.fasttrack.data.schedule.ScheduleItem
 import com.darkrockstudios.apps.fasttrack.data.schedule.ScheduleRepository
+import com.darkrockstudios.apps.fasttrack.data.schedule.WeeklyPlanDay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -20,11 +22,24 @@ class ScheduleViewModel(
 
 	override fun loadSchedules() {
 		viewModelScope.launch {
-			repository.loadAll().collect { schedules ->
+			combine(
+				repository.loadAll(),
+				repository.loadWeeklyPlanMap(),
+			) { schedules, dayMap ->
+				val scheduleMap = schedules.associateBy { it.id }
+				val weeklyPlan = (1..7).map { day ->
+					WeeklyPlanDay(
+						dayOfWeek = day,
+						schedule = dayMap[day]?.let { scheduleMap[it] },
+					)
+				}
+				Triple(schedules, schedules.firstOrNull { it.isActive }, weeklyPlan)
+			}.collect { (schedules, active, weeklyPlan) ->
 				_uiState.update {
 					it.copy(
 						schedules = schedules,
-						activeSchedule = schedules.firstOrNull { s -> s.isActive },
+						activeSchedule = active,
+						weeklyPlan = weeklyPlan,
 					)
 				}
 			}
@@ -61,6 +76,14 @@ class ScheduleViewModel(
 		}
 	}
 
+	override fun setDaySchedule(dayOfWeek: Int, scheduleId: Int?) {
+		viewModelScope.launch(Dispatchers.IO) {
+			repository.setDaySchedule(dayOfWeek, scheduleId)
+		}
+	}
+
 	override fun showAddDialog() = _uiState.update { it.copy(showAddDialog = true) }
 	override fun hideAddDialog() = _uiState.update { it.copy(showAddDialog = false) }
+	override fun showDayPicker(dayOfWeek: Int) = _uiState.update { it.copy(dayToEdit = dayOfWeek) }
+	override fun hideDayPicker() = _uiState.update { it.copy(dayToEdit = null) }
 }

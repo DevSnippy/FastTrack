@@ -1,39 +1,82 @@
 package com.darkrockstudios.apps.fasttrack.screens.food
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.darkrockstudios.apps.fasttrack.R
+import com.darkrockstudios.apps.fasttrack.data.food.FoodLogEntry
 import com.darkrockstudios.apps.fasttrack.screens.preview.getContext
 import com.darkrockstudios.apps.fasttrack.utils.shouldUse24HourFormat
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlinx.datetime.*
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun AddFoodDialog(
+	entryToEdit: FoodLogEntry? = null,
 	onDismiss: () -> Unit,
-	onAdd: (description: String, timestamp: Long) -> Unit,
+	onSave: (description: String, timestamp: Long, calories: Int?) -> Unit,
 ) {
-	val now = remember {
-		Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-	}
-	var description by remember { mutableStateOf("") }
+	val isEditing = entryToEdit != null
+	val now = remember { Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()) }
+	val initial = entryToEdit?.time ?: now
+
+	var description by remember { mutableStateOf(entryToEdit?.description ?: "") }
+	var caloriesText by remember { mutableStateOf(entryToEdit?.calories?.toString() ?: "") }
+	var selectedDate by remember { mutableStateOf(initial.date) }
+	var showDatePicker by remember { mutableStateOf(false) }
+
 	val use24Hour = shouldUse24HourFormat(getContext())
 	val timePickerState = rememberTimePickerState(
-		initialHour = now.hour,
-		initialMinute = now.minute,
+		initialHour = initial.hour,
+		initialMinute = initial.minute,
 		is24Hour = use24Hour,
 	)
+
+	val datePickerState = rememberDatePickerState(
+		initialSelectedDateMillis = initial.date
+			.atStartOfDayIn(TimeZone.UTC)
+			.toEpochMilliseconds(),
+	)
+
+	if (showDatePicker) {
+		DatePickerDialog(
+			onDismissRequest = { showDatePicker = false },
+			confirmButton = {
+				TextButton(onClick = {
+					datePickerState.selectedDateMillis?.let { ms ->
+						selectedDate = Instant.fromEpochMilliseconds(ms)
+							.toLocalDateTime(TimeZone.UTC)
+							.date
+					}
+					showDatePicker = false
+				}) { Text(stringResource(R.string.done_button)) }
+			},
+			dismissButton = {
+				TextButton(onClick = { showDatePicker = false }) {
+					Text(stringResource(R.string.cancel_button))
+				}
+			},
+		) {
+			DatePicker(state = datePickerState)
+		}
+	}
 
 	Dialog(
 		onDismissRequest = onDismiss,
@@ -45,7 +88,9 @@ fun AddFoodDialog(
 				.padding(horizontal = 24.dp)
 		) {
 			Column(
-				modifier = Modifier.padding(16.dp),
+				modifier = Modifier
+					.padding(16.dp)
+					.verticalScroll(rememberScrollState()),
 				verticalArrangement = Arrangement.spacedBy(12.dp),
 			) {
 				Row(
@@ -54,14 +99,11 @@ fun AddFoodDialog(
 					verticalAlignment = Alignment.CenterVertically,
 				) {
 					Text(
-						text = stringResource(R.string.food_add_title),
+						text = stringResource(if (isEditing) R.string.food_edit_title else R.string.food_add_title),
 						style = MaterialTheme.typography.headlineSmall,
 					)
 					IconButton(onClick = onDismiss) {
-						Icon(
-							imageVector = Icons.Default.Close,
-							contentDescription = stringResource(R.string.close_button_content_description),
-						)
+						Icon(Icons.Default.Close, contentDescription = stringResource(R.string.close_button_content_description))
 					}
 				}
 
@@ -74,6 +116,35 @@ fun AddFoodDialog(
 					minLines = 2,
 				)
 
+				Row(
+					modifier = Modifier
+						.fillMaxWidth()
+						.clickable { showDatePicker = true }
+						.padding(vertical = 4.dp),
+					horizontalArrangement = Arrangement.SpaceBetween,
+					verticalAlignment = Alignment.CenterVertically,
+				) {
+					Column {
+						Text(
+							text = stringResource(R.string.food_date_label),
+							style = MaterialTheme.typography.labelMedium,
+							color = MaterialTheme.colorScheme.onSurfaceVariant,
+						)
+						Text(
+							text = selectedDate.toString(),
+							style = MaterialTheme.typography.bodyLarge,
+						)
+					}
+					Icon(
+						imageVector = Icons.Default.Edit,
+						contentDescription = stringResource(R.string.edit_date),
+						tint = MaterialTheme.colorScheme.primary,
+						modifier = Modifier.size(20.dp),
+					)
+				}
+
+				HorizontalDivider()
+
 				Text(
 					text = stringResource(R.string.food_time_label),
 					style = MaterialTheme.typography.labelMedium,
@@ -83,6 +154,16 @@ fun AddFoodDialog(
 				TimeInput(
 					state = timePickerState,
 					modifier = Modifier.align(Alignment.CenterHorizontally),
+				)
+
+				OutlinedTextField(
+					value = caloriesText,
+					onValueChange = { v -> if (v.isEmpty() || v.toIntOrNull() != null) caloriesText = v },
+					label = { Text(stringResource(R.string.food_calories_hint)) },
+					modifier = Modifier.fillMaxWidth(),
+					keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+					singleLine = true,
+					placeholder = { Text(stringResource(R.string.food_calories_placeholder)) },
 				)
 
 				Row(
@@ -97,23 +178,19 @@ fun AddFoodDialog(
 					Button(
 						onClick = {
 							if (description.isNotBlank()) {
-								val today = now.date
 								val selectedDateTime = LocalDateTime(
-									date = today,
-									time = LocalTime(
-										hour = timePickerState.hour,
-										minute = timePickerState.minute,
-									),
+									date = selectedDate,
+									time = LocalTime(hour = timePickerState.hour, minute = timePickerState.minute),
 								)
 								val timestamp = selectedDateTime
 									.toInstant(TimeZone.currentSystemDefault())
 									.toEpochMilliseconds()
-								onAdd(description.trim(), timestamp)
+								onSave(description.trim(), timestamp, caloriesText.toIntOrNull())
 							}
 						},
 						enabled = description.isNotBlank(),
 					) {
-						Text(stringResource(R.string.food_add_button))
+						Text(stringResource(if (isEditing) R.string.manual_add_save_button else R.string.food_add_button))
 					}
 				}
 			}

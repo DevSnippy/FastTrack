@@ -9,6 +9,7 @@ class FoodLogDatabaseDatasource(
 ) : FoodLogDatasource {
 	override fun loadAll(): Flow<List<FoodEntry>> = database.foodDao().loadAll()
 	override fun insert(entry: FoodEntry): Long = database.foodDao().insert(entry)
+	override fun update(entry: FoodEntry): Int = database.foodDao().update(entry)
 	override fun deleteByUid(uid: Int): Int = database.foodDao().deleteByUid(uid)
 	override fun updateCalories(uid: Int, calories: Int): Int = database.foodDao().updateCalories(uid, calories)
 }

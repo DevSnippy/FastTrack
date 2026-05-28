@@ -315,8 +315,12 @@
 	<!-- Food log -->
 	<string name="title_food">Food</string>
 	<string name="food_add_title">Add Food Entry</string>
+	<string name="food_edit_title">Edit Food Entry</string>
 	<string name="food_description_hint">What did you eat?</string>
+	<string name="food_date_label">Date</string>
 	<string name="food_time_label">Time</string>
+	<string name="food_calories_hint">Calories (optional)</string>
+	<string name="food_calories_placeholder">e.g. 350</string>
 	<string name="food_add_button">Add</string>
 	<string name="food_copy_prompt_button">Copy AI Prompt</string>
 	<string name="food_paste_response_button">Paste AI Response</string>
@@ -347,4 +351,7 @@
 	<string name="schedule_fast_window_label">Fast</string>
 	<string name="schedule_eat_time_label">Window</string>
 	<string name="schedule_card_detail">Fast %1$dh  ·  Eat %2$dh  ·  %3$s – %4$s</string>
+	<string name="schedule_weekly_plan_label">Weekly Plan</string>
+	<string name="schedule_rest_day">Rest day</string>
+	<string name="schedule_pick_day_title">%1$s — Choose Schedule</string>
 </resources>

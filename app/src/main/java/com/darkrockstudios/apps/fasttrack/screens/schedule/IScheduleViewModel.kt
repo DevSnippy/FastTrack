@@ -1,6 +1,7 @@
 package com.darkrockstudios.apps.fasttrack.screens.schedule
 
 import com.darkrockstudios.apps.fasttrack.data.schedule.ScheduleItem
+import com.darkrockstudios.apps.fasttrack.data.schedule.WeeklyPlanDay
 import kotlinx.coroutines.flow.StateFlow
 
 interface IScheduleViewModel {
@@ -8,6 +9,8 @@ interface IScheduleViewModel {
 		val schedules: List<ScheduleItem> = emptyList(),
 		val activeSchedule: ScheduleItem? = null,
 		val showAddDialog: Boolean = false,
+		val weeklyPlan: List<WeeklyPlanDay> = emptyList(),
+		val dayToEdit: Int? = null,
 	)
 
 	val uiState: StateFlow<ScheduleUiState>
@@ -19,4 +22,7 @@ interface IScheduleViewModel {
 	fun deactivateSchedule(item: ScheduleItem)
 	fun showAddDialog()
 	fun hideAddDialog()
+	fun setDaySchedule(dayOfWeek: Int, scheduleId: Int?)
+	fun showDayPicker(dayOfWeek: Int)
+	fun hideDayPicker()
 }

@@ -15,8 +15,12 @@ class FoodLogRepositoryImpl(
 		entries.map { it.toFoodLogEntry() }
 	}
 
-	override fun addEntry(description: String, timestamp: Long) {
-		datasource.insert(FoodEntry(description = description, timestamp = timestamp))
+	override fun addEntry(description: String, timestamp: Long, calories: Int?) {
+		datasource.insert(FoodEntry(description = description, timestamp = timestamp, calories = calories))
+	}
+
+	override fun updateEntry(id: Int, description: String, timestamp: Long, calories: Int?): Boolean {
+		return datasource.update(FoodEntry(uid = id, description = description, timestamp = timestamp, calories = calories)) > 0
 	}
 
 	override fun delete(entry: FoodLogEntry): Boolean {

@@ -8,4 +8,6 @@ interface ScheduleRepository {
 	fun delete(item: ScheduleItem): Boolean
 	fun setActive(item: ScheduleItem): Boolean
 	fun deactivate(item: ScheduleItem): Boolean
+	fun loadWeeklyPlanMap(): Flow<Map<Int, Int?>>
+	fun setDaySchedule(dayOfWeek: Int, scheduleId: Int?)
 }

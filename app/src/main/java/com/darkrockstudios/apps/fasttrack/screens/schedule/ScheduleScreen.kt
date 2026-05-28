@@ -22,6 +22,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.darkrockstudios.apps.fasttrack.R
 import com.darkrockstudios.apps.fasttrack.data.schedule.ScheduleItem
+import com.darkrockstudios.apps.fasttrack.data.schedule.WeeklyPlanDay
 import com.darkrockstudios.apps.fasttrack.utils.MAX_COLUMN_WIDTH
 import org.koin.compose.viewmodel.koinViewModel
 import java.util.Locale
@@ -78,12 +79,6 @@ fun ScheduleScreen(
 					)
 				}
 			} else {
-				Text(
-					text = stringResource(R.string.schedule_my_schedules_label),
-					style = MaterialTheme.typography.labelLarge,
-					color = MaterialTheme.colorScheme.onSurfaceVariant,
-				)
-				Spacer(Modifier.height(8.dp))
 				LazyColumn(
 					modifier = Modifier.weight(1f),
 					contentPadding = PaddingValues(
@@ -91,6 +86,30 @@ fun ScheduleScreen(
 					),
 					verticalArrangement = Arrangement.spacedBy(8.dp),
 				) {
+					item {
+						Text(
+							text = stringResource(R.string.schedule_weekly_plan_label),
+							style = MaterialTheme.typography.labelLarge,
+							color = MaterialTheme.colorScheme.onSurfaceVariant,
+						)
+					}
+
+					items(uiState.weeklyPlan, key = { "day_${it.dayOfWeek}" }) { day ->
+						WeeklyPlanDayRow(
+							day = day,
+							onClick = { viewModel.showDayPicker(day.dayOfWeek) },
+						)
+					}
+
+					item {
+						Spacer(Modifier.height(8.dp))
+						Text(
+							text = stringResource(R.string.schedule_my_schedules_label),
+							style = MaterialTheme.typography.labelLarge,
+							color = MaterialTheme.colorScheme.onSurfaceVariant,
+						)
+					}
+
 					items(uiState.schedules, key = { it.id }) { schedule ->
 						ScheduleCard(
 							schedule = schedule,
@@ -100,6 +119,22 @@ fun ScheduleScreen(
 						)
 					}
 				}
+			}
+
+			val dayToEdit = uiState.dayToEdit
+			if (dayToEdit != null) {
+				DaySchedulePickerDialog(
+					dayOfWeek = dayToEdit,
+					currentScheduleId = uiState.weeklyPlan
+						.firstOrNull { it.dayOfWeek == dayToEdit }
+						?.schedule?.id,
+					schedules = uiState.schedules,
+					onSelect = { scheduleId ->
+						viewModel.setDaySchedule(dayToEdit, scheduleId)
+						viewModel.hideDayPicker()
+					},
+					onDismiss = { viewModel.hideDayPicker() },
+				)
 			}
 		}
 
@@ -299,6 +334,110 @@ private fun ScheduleCard(
 			}
 		}
 	}
+}
+
+@Composable
+private fun WeeklyPlanDayRow(
+	day: WeeklyPlanDay,
+	onClick: () -> Unit,
+) {
+	ElevatedCard(
+		onClick = onClick,
+		modifier = Modifier.fillMaxWidth(),
+	) {
+		Row(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(horizontal = 16.dp, vertical = 12.dp),
+			verticalAlignment = Alignment.CenterVertically,
+		) {
+			Text(
+				text = day.dayName,
+				style = MaterialTheme.typography.bodyLarge,
+				modifier = Modifier.width(100.dp),
+			)
+			if (day.schedule != null) {
+				Column(modifier = Modifier.weight(1f)) {
+					Text(
+						text = day.schedule.name,
+						style = MaterialTheme.typography.bodyMedium,
+						maxLines = 1,
+						overflow = TextOverflow.Ellipsis,
+					)
+					Text(
+						text = "Fast ${day.schedule.fastingHours}h  ·  Eat ${day.schedule.eatingWindowHours}h",
+						style = MaterialTheme.typography.labelSmall,
+						color = MaterialTheme.colorScheme.onSurfaceVariant,
+					)
+				}
+			} else {
+				Text(
+					text = stringResource(R.string.schedule_rest_day),
+					style = MaterialTheme.typography.bodyMedium,
+					color = MaterialTheme.colorScheme.onSurfaceVariant,
+					modifier = Modifier.weight(1f),
+				)
+			}
+		}
+	}
+}
+
+@Composable
+private fun DaySchedulePickerDialog(
+	dayOfWeek: Int,
+	currentScheduleId: Int?,
+	schedules: List<ScheduleItem>,
+	onSelect: (Int?) -> Unit,
+	onDismiss: () -> Unit,
+) {
+	val dayName = WeeklyPlanDay(dayOfWeek).dayName
+	AlertDialog(
+		onDismissRequest = onDismiss,
+		title = { Text(stringResource(R.string.schedule_pick_day_title, dayName)) },
+		text = {
+			Column {
+				Row(
+					modifier = Modifier
+						.fillMaxWidth()
+						.padding(vertical = 4.dp),
+					verticalAlignment = Alignment.CenterVertically,
+				) {
+					RadioButton(
+						selected = currentScheduleId == null,
+						onClick = { onSelect(null) },
+					)
+					Spacer(Modifier.width(8.dp))
+					Text(stringResource(R.string.schedule_rest_day), style = MaterialTheme.typography.bodyMedium)
+				}
+				HorizontalDivider()
+				schedules.forEach { schedule ->
+					Row(
+						modifier = Modifier
+							.fillMaxWidth()
+							.padding(vertical = 4.dp),
+						verticalAlignment = Alignment.CenterVertically,
+					) {
+						RadioButton(
+							selected = currentScheduleId == schedule.id,
+							onClick = { onSelect(schedule.id) },
+						)
+						Spacer(Modifier.width(8.dp))
+						Column {
+							Text(schedule.name, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+							Text(
+								"Fast ${schedule.fastingHours}h  ·  Eat ${schedule.eatingWindowHours}h",
+								style = MaterialTheme.typography.labelSmall,
+								color = MaterialTheme.colorScheme.onSurfaceVariant,
+							)
+						}
+					}
+				}
+			}
+		},
+		confirmButton = {
+			TextButton(onClick = onDismiss) { Text(stringResource(R.string.done_button)) }
+		},
+	)
 }
 
 private fun formatHour(hour: Int, minute: Int): String {

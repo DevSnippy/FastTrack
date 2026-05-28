@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import android.content.ClipData
@@ -151,6 +152,7 @@ fun FoodScreen(
 					items(uiState.entries, key = { it.id }) { entry ->
 						FoodEntryCard(
 							entry = entry,
+							onEdit = { viewModel.showEditDialog(it) },
 							onDelete = { viewModel.deleteEntry(it) },
 						)
 					}
@@ -178,9 +180,20 @@ fun FoodScreen(
 		if (uiState.showAddDialog) {
 			AddFoodDialog(
 				onDismiss = { viewModel.hideAddDialog() },
-				onAdd = { description, timestamp ->
-					viewModel.addEntry(description, timestamp)
+				onSave = { description, timestamp, calories ->
+					viewModel.addEntry(description, timestamp, calories)
 					viewModel.hideAddDialog()
+				},
+			)
+		}
+
+		if (uiState.entryToEdit != null) {
+			AddFoodDialog(
+				entryToEdit = uiState.entryToEdit,
+				onDismiss = { viewModel.hideEditDialog() },
+				onSave = { description, timestamp, calories ->
+					viewModel.updateEntry(uiState.entryToEdit!!.id, description, timestamp, calories)
+					viewModel.hideEditDialog()
 				},
 			)
 		}
@@ -197,6 +210,7 @@ fun FoodScreen(
 @Composable
 private fun FoodEntryCard(
 	entry: FoodLogEntry,
+	onEdit: (FoodLogEntry) -> Unit,
 	onDelete: (FoodLogEntry) -> Unit,
 ) {
 	ElevatedCard(modifier = Modifier.fillMaxWidth()) {
@@ -234,6 +248,14 @@ private fun FoodEntryCard(
 					},
 				)
 				Spacer(Modifier.width(4.dp))
+			}
+
+			IconButton(onClick = { onEdit(entry) }) {
+				Icon(
+					imageVector = Icons.Default.Edit,
+					contentDescription = stringResource(R.string.menu_edit),
+					tint = MaterialTheme.colorScheme.primary,
+				)
 			}
 
 			IconButton(onClick = { onDelete(entry) }) {

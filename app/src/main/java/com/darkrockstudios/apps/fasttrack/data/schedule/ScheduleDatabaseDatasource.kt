@@ -2,6 +2,7 @@ package com.darkrockstudios.apps.fasttrack.data.schedule
 
 import com.darkrockstudios.apps.fasttrack.data.database.AppDatabase
 import com.darkrockstudios.apps.fasttrack.data.database.ScheduleEntry
+import com.darkrockstudios.apps.fasttrack.data.database.WeeklyPlanEntry
 import kotlinx.coroutines.flow.Flow
 
 class ScheduleDatabaseDatasource(
@@ -12,4 +13,12 @@ class ScheduleDatabaseDatasource(
 	override fun deleteByUid(uid: Int): Int = database.scheduleDao().deleteByUid(uid)
 	override fun deactivateAll(): Int = database.scheduleDao().deactivateAll()
 	override fun activate(uid: Int): Int = database.scheduleDao().activate(uid)
+	override fun loadWeeklyPlan(): Flow<List<WeeklyPlanEntry>> = database.weeklyPlanDao().loadAll()
+	override fun setDaySchedule(dayOfWeek: Int, scheduleId: Int?) {
+		if (scheduleId != null) {
+			database.weeklyPlanDao().setDay(WeeklyPlanEntry(dayOfWeek = dayOfWeek, scheduleId = scheduleId))
+		} else {
+			database.weeklyPlanDao().clearDay(dayOfWeek)
+		}
+	}
 }

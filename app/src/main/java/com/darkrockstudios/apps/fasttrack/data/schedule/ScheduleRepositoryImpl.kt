@@ -43,6 +43,16 @@ class ScheduleRepositoryImpl(
 		return datasource.deactivateAll() >= 0
 	}
 
+	override fun loadWeeklyPlanMap(): Flow<Map<Int, Int?>> {
+		return datasource.loadWeeklyPlan().map { entries ->
+			entries.associate { it.dayOfWeek to it.scheduleId }
+		}
+	}
+
+	override fun setDaySchedule(dayOfWeek: Int, scheduleId: Int?) {
+		datasource.setDaySchedule(dayOfWeek, scheduleId)
+	}
+
 	private fun ScheduleEntry.toScheduleItem() = ScheduleItem(
 		id = uid,
 		name = name,
