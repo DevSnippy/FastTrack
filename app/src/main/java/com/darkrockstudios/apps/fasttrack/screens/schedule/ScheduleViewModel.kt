@@ -27,7 +27,7 @@ class ScheduleViewModel(
 				repository.loadWeeklyPlanMap(),
 			) { schedules, dayMap ->
 				val scheduleMap = schedules.associateBy { it.id }
-				val weeklyPlan = (1..7).map { day ->
+				val weeklyPlan = listOf(7, 1, 2, 3, 4, 5, 6).map { day ->
 					WeeklyPlanDay(
 						dayOfWeek = day,
 						schedule = dayMap[day]?.let { scheduleMap[it] },
