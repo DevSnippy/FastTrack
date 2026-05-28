@@ -30,6 +30,7 @@ import kotlinx.datetime.*
 @Composable
 fun AddFoodDialog(
 	entryToEdit: FoodLogEntry? = null,
+	defaultDate: LocalDate? = null,
 	onDismiss: () -> Unit,
 	onSave: (description: String, timestamp: Long, calories: Int?) -> Unit,
 ) {
@@ -39,7 +40,7 @@ fun AddFoodDialog(
 
 	var description by remember { mutableStateOf(entryToEdit?.description ?: "") }
 	var caloriesText by remember { mutableStateOf(entryToEdit?.calories?.toString() ?: "") }
-	var selectedDate by remember { mutableStateOf(initial.date) }
+	var selectedDate by remember { mutableStateOf(defaultDate ?: initial.date) }
 	var showDatePicker by remember { mutableStateOf(false) }
 
 	val use24Hour = shouldUse24HourFormat(getContext())

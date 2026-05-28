@@ -206,6 +206,7 @@ fun FoodScreen(
 
 		if (uiState.showAddDialog) {
 			AddFoodDialog(
+				defaultDate = uiState.selectedDate,
 				onDismiss = { viewModel.hideAddDialog() },
 				onSave = { description, timestamp, calories ->
 					viewModel.addEntry(description, timestamp, calories)
