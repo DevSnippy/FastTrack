@@ -9,26 +9,54 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
 import org.json.JSONArray
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 class FoodViewModel(
 	private val repository: FoodLogRepository,
 ) : ViewModel(), IFoodViewModel {
 
-	private val _uiState = MutableStateFlow(IFoodViewModel.FoodUiState())
+	private val today: LocalDate
+		get() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+
+	private val _selectedDate = MutableStateFlow(today)
+
+	private val _uiState = MutableStateFlow(IFoodViewModel.FoodUiState(selectedDate = today))
 	override val uiState: StateFlow<IFoodViewModel.FoodUiState> = _uiState.asStateFlow()
 
 	override fun loadEntries() {
 		viewModelScope.launch {
-			repository.loadAll().collect { entries ->
-				val total = if (entries.any { it.calories != null }) {
-					entries.sumOf { it.calories ?: 0 }
-				} else null
-				_uiState.update { it.copy(entries = entries, totalCalories = total) }
+			combine(repository.loadAll(), _selectedDate) { all, date ->
+				val filtered = all.filter { it.time.date == date }
+				val total = if (filtered.any { it.calories != null }) filtered.sumOf { it.calories ?: 0 } else null
+				Triple(filtered, total, date)
+			}.collect { (filtered, total, date) ->
+				_uiState.update { it.copy(entries = filtered, totalCalories = total, selectedDate = date) }
 			}
 		}
+	}
+
+	override fun selectDate(date: LocalDate) {
+		_selectedDate.value = date
+	}
+
+	override fun selectPrevDay() {
+		_selectedDate.update { it.minus(1, DateTimeUnit.DAY) }
+	}
+
+	override fun selectNextDay() {
+		_selectedDate.update { it.plus(1, DateTimeUnit.DAY) }
 	}
 
 	override fun addEntry(description: String, timestamp: Long, calories: Int?) {
@@ -77,9 +105,7 @@ $itemLines
 				obj.getInt("id") to obj.getInt("calories")
 			}
 			viewModelScope.launch(Dispatchers.IO) {
-				updates.forEach { (id, calories) ->
-					repository.updateCalories(id, calories)
-				}
+				updates.forEach { (id, calories) -> repository.updateCalories(id, calories) }
 			}
 			true
 		} catch (e: Exception) {

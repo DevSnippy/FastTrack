@@ -330,6 +330,9 @@
 	<string name="food_paste_apply_button">Apply</string>
 	<string name="food_paste_error">Invalid JSON format. Please check and try again.</string>
 	<string name="food_empty_state">No food entries yet.\nTap + to log what you ate.</string>
+	<string name="food_empty_day_state">Nothing logged for this day.\nTap + to add an entry.</string>
+	<string name="food_day_today">Today</string>
+	<string name="food_day_yesterday">Yesterday</string>
 	<string name="food_total_calories_label">Estimated total calories</string>
 	<string name="food_total_calories_value">%1$d kcal</string>
 
