@@ -6,6 +6,14 @@ import com.darkrockstudios.apps.fasttrack.data.activefast.ActiveFastPreferencesD
 import com.darkrockstudios.apps.fasttrack.data.activefast.ActiveFastRepository
 import com.darkrockstudios.apps.fasttrack.data.activefast.ActiveFastRepositoryImpl
 import com.darkrockstudios.apps.fasttrack.data.database.AppDatabase
+import com.darkrockstudios.apps.fasttrack.data.food.FoodLogDatabaseDatasource
+import com.darkrockstudios.apps.fasttrack.data.food.FoodLogDatasource
+import com.darkrockstudios.apps.fasttrack.data.food.FoodLogRepository
+import com.darkrockstudios.apps.fasttrack.data.food.FoodLogRepositoryImpl
+import com.darkrockstudios.apps.fasttrack.data.schedule.ScheduleDatabaseDatasource
+import com.darkrockstudios.apps.fasttrack.data.schedule.ScheduleDatasource
+import com.darkrockstudios.apps.fasttrack.data.schedule.ScheduleRepository
+import com.darkrockstudios.apps.fasttrack.data.schedule.ScheduleRepositoryImpl
 import com.darkrockstudios.apps.fasttrack.data.log.FastingLogDatabaseDatasource
 import com.darkrockstudios.apps.fasttrack.data.log.FastingLogDatasource
 import com.darkrockstudios.apps.fasttrack.data.log.FastingLogRepository
@@ -14,6 +22,10 @@ import com.darkrockstudios.apps.fasttrack.data.settings.SettingsDatasource
 import com.darkrockstudios.apps.fasttrack.data.settings.SettingsPreferencesDatasource
 import com.darkrockstudios.apps.fasttrack.screens.fasting.FastingViewModel
 import com.darkrockstudios.apps.fasttrack.screens.fasting.IFastingViewModel
+import com.darkrockstudios.apps.fasttrack.screens.food.FoodViewModel
+import com.darkrockstudios.apps.fasttrack.screens.food.IFoodViewModel
+import com.darkrockstudios.apps.fasttrack.screens.schedule.IScheduleViewModel
+import com.darkrockstudios.apps.fasttrack.screens.schedule.ScheduleViewModel
 import com.darkrockstudios.apps.fasttrack.screens.log.ILogViewModel
 import com.darkrockstudios.apps.fasttrack.screens.log.LogViewModel
 import com.darkrockstudios.apps.fasttrack.screens.log.manualadd.IManualAddViewModel
@@ -32,7 +44,7 @@ val mainModule = module {
 			get(),
 			AppDatabase::class.java,
 			"app-database"
-		).build()
+		).addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_2_3).build()
 	}
 
 	single { Clock.System } bind Clock::class
@@ -45,8 +57,16 @@ val mainModule = module {
 	singleOf(::FastingLogDatabaseDatasource) bind FastingLogDatasource::class
 	singleOf(::FastingLogRepositoryImpl) bind FastingLogRepository::class
 
+	singleOf(::FoodLogDatabaseDatasource) bind FoodLogDatasource::class
+	singleOf(::FoodLogRepositoryImpl) bind FoodLogRepository::class
+
+	singleOf(::ScheduleDatabaseDatasource) bind ScheduleDatasource::class
+	singleOf(::ScheduleRepositoryImpl) bind ScheduleRepository::class
+
 	viewModelOf(::FastingViewModel) bind IFastingViewModel::class
 	viewModelOf(::LogViewModel) bind ILogViewModel::class
 	viewModelOf(::ProfileViewModel) bind IProfileViewModel::class
 	viewModelOf(::ManualAddViewModel) bind IManualAddViewModel::class
+	viewModelOf(::FoodViewModel) bind IFoodViewModel::class
+	viewModelOf(::ScheduleViewModel) bind IScheduleViewModel::class
 }

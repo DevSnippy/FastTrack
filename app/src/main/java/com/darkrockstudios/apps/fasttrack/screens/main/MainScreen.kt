@@ -23,8 +23,10 @@ import com.darkrockstudios.apps.fasttrack.R
 import com.darkrockstudios.apps.fasttrack.data.activefast.ActiveFastRepository
 import com.darkrockstudios.apps.fasttrack.screens.fasting.ExternalRequests
 import com.darkrockstudios.apps.fasttrack.screens.fasting.FastingScreen
+import com.darkrockstudios.apps.fasttrack.screens.food.FoodScreen
 import com.darkrockstudios.apps.fasttrack.screens.log.LogScreen
 import com.darkrockstudios.apps.fasttrack.screens.profile.ProfileScreen
+import com.darkrockstudios.apps.fasttrack.screens.schedule.ScheduleScreen
 import com.darkrockstudios.apps.fasttrack.utils.Utils
 import kotlinx.coroutines.launch
 import kotlin.time.ExperimentalTime
@@ -32,7 +34,9 @@ import kotlin.time.ExperimentalTime
 enum class ScreenPages {
 	Fasting,
 	Log,
-	Profile;
+	Profile,
+	Food,
+	Schedule;
 
 	companion object {
 		fun fromOrdinal(ordinal: Int): ScreenPages {
@@ -40,6 +44,8 @@ enum class ScreenPages {
 				0 -> Fasting
 				1 -> Log
 				2 -> Profile
+				3 -> Food
+				4 -> Schedule
 				else -> throw IllegalArgumentException("Invalid ordinal")
 			}
 		}
@@ -69,15 +75,19 @@ fun MainScreen(
 	val fastingTitle = stringResource(id = R.string.title_fasting)
 	val logTitle = stringResource(id = R.string.title_log)
 	val profileTitle = stringResource(id = R.string.title_profile)
+	val foodTitle = stringResource(id = R.string.title_food)
+	val scheduleTitle = stringResource(id = R.string.title_schedule)
 
 	val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 	val compactHeight = windowSizeClass.minHeightDp < windowSizeClass.minWidthDp
 
-	val currentTitle = remember(pagerState.currentPage, fastingTitle, logTitle, profileTitle) {
+	val currentTitle = remember(pagerState.currentPage, fastingTitle, logTitle, profileTitle, foodTitle, scheduleTitle) {
 		when (ScreenPages.fromOrdinal(pagerState.currentPage)) {
 			ScreenPages.Fasting -> fastingTitle
 			ScreenPages.Log -> logTitle
 			ScreenPages.Profile -> profileTitle
+			ScreenPages.Food -> foodTitle
+			ScreenPages.Schedule -> scheduleTitle
 		}
 	}
 
@@ -204,6 +214,38 @@ fun MainScreen(
 							}
 						}
 					)
+
+					NavigationBarItem(
+						icon = {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_food),
+								contentDescription = foodTitle
+							)
+						},
+						label = { Text(foodTitle) },
+						selected = pagerState.currentPage == ScreenPages.Food.ordinal,
+						onClick = {
+							coroutineScope.launch {
+								pagerState.animateScrollToPage(ScreenPages.Food.ordinal)
+							}
+						}
+					)
+
+					NavigationBarItem(
+						icon = {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_schedule),
+								contentDescription = scheduleTitle
+							)
+						},
+						label = { Text(scheduleTitle) },
+						selected = pagerState.currentPage == ScreenPages.Schedule.ordinal,
+						onClick = {
+							coroutineScope.launch {
+								pagerState.animateScrollToPage(ScreenPages.Schedule.ordinal)
+							}
+						}
+					)
 				}
 			}
 		}
@@ -260,6 +302,38 @@ fun MainScreen(
 						onClick = {
 							coroutineScope.launch {
 								pagerState.animateScrollToPage(2)
+							}
+						}
+					)
+
+					NavigationRailItem(
+						icon = {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_food),
+								contentDescription = foodTitle
+							)
+						},
+						label = { Text(foodTitle) },
+						selected = pagerState.currentPage == ScreenPages.Food.ordinal,
+						onClick = {
+							coroutineScope.launch {
+								pagerState.animateScrollToPage(ScreenPages.Food.ordinal)
+							}
+						}
+					)
+
+					NavigationRailItem(
+						icon = {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_schedule),
+								contentDescription = scheduleTitle
+							)
+						},
+						label = { Text(scheduleTitle) },
+						selected = pagerState.currentPage == ScreenPages.Schedule.ordinal,
+						onClick = {
+							coroutineScope.launch {
+								pagerState.animateScrollToPage(ScreenPages.Schedule.ordinal)
 							}
 						}
 					)
@@ -346,6 +420,14 @@ private fun PageContainer(
 					)
 				}
 			)
+		}
+
+		ScreenPages.Food -> {
+			FoodScreen(contentPaddingValues = contentPaddingValues)
+		}
+
+		ScreenPages.Schedule -> {
+			ScheduleScreen(contentPaddingValues = contentPaddingValues)
 		}
 	}
 }

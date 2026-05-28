@@ -311,4 +311,40 @@
 	<string name="log_stats_label">Lifetime stats</string>
 	<string name="log_view_mode_list">List</string>
 	<string name="log_view_mode_calendar">Calendar</string>
+
+	<!-- Food log -->
+	<string name="title_food">Food</string>
+	<string name="food_add_title">Add Food Entry</string>
+	<string name="food_description_hint">What did you eat?</string>
+	<string name="food_time_label">Time</string>
+	<string name="food_add_button">Add</string>
+	<string name="food_copy_prompt_button">Copy AI Prompt</string>
+	<string name="food_paste_response_button">Paste AI Response</string>
+	<string name="food_paste_title">Paste AI Response</string>
+	<string name="food_paste_description">Paste the JSON response from your AI assistant to apply calorie estimates.</string>
+	<string name="food_paste_hint">Paste JSON here…</string>
+	<string name="food_paste_apply_button">Apply</string>
+	<string name="food_paste_error">Invalid JSON format. Please check and try again.</string>
+	<string name="food_empty_state">No food entries yet.\nTap + to log what you ate.</string>
+	<string name="food_total_calories_label">Estimated total calories</string>
+	<string name="food_total_calories_value">%1$d kcal</string>
+
+	<!-- Schedule -->
+	<string name="title_schedule">Schedule</string>
+	<string name="schedule_add_button">Add Schedule</string>
+	<string name="schedule_pick_template_title">Pick a Template</string>
+	<string name="schedule_configure_title">Configure Schedule</string>
+	<string name="schedule_name_label">Schedule Name</string>
+	<string name="schedule_fasting_hours_label">Fasting Hours (1–23)</string>
+	<string name="schedule_eating_window_computed">Eating window: %1$d hours</string>
+	<string name="schedule_eat_start_label">Eating window starts at</string>
+	<string name="schedule_save_button">Save</string>
+	<string name="schedule_empty_state">No schedules yet.\nTap + to add one.</string>
+	<string name="schedule_my_schedules_label">My Schedules</string>
+	<string name="schedule_active_label">Active Schedule</string>
+	<string name="schedule_deactivate_button">Deactivate</string>
+	<string name="schedule_eat_window_label">Eat</string>
+	<string name="schedule_fast_window_label">Fast</string>
+	<string name="schedule_eat_time_label">Window</string>
+	<string name="schedule_card_detail">Fast %1$dh  ·  Eat %2$dh  ·  %3$s – %4$s</string>
 </resources>
