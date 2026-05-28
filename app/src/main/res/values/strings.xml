@@ -354,4 +354,6 @@
 	<string name="schedule_weekly_plan_label">Weekly Plan</string>
 	<string name="schedule_rest_day">Rest day</string>
 	<string name="schedule_pick_day_title">%1$s — Choose Schedule</string>
+	<string name="schedule_apply_button">Apply</string>
+	<string name="schedule_add_new_option">Add new schedule…</string>
 </resources>
