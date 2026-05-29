@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fast Track</string>
+    <string name="action_share">שתף</string>
+    <string name="action_info">מידע</string>
+    <string name="action_about">אודות</string>
+    <string name="action_export">ייצוא יומן</string>
+    <string name="action_export_description">יצירת קובץ CSV של יומן הצום לגיבוי</string>
+    <string name="action_import">ייבוא יומן</string>
+    <string name="action_import_description">טעינת יומן מייצוא קודם</string>
+    <string name="import_success">היומן יובא בהצלחה</string>
+    <string name="import_failed">ייבוא היומן נכשל</string>
+
+    <!-- Settings -->
+    <string name="settings_section_notifications">התראות</string>
+    <string name="settings_section_ui">ממשק</string>
+    <string name="settings_section_logbook">יומן</string>
+
+    <!-- Settings: Fasting notification -->
+    <string name="settings_fasting_notification_title">הצג התראת צום</string>
+    <string name="settings_fasting_notification_subtitle">מספק מידע בזמן אמת במהלך הצום</string>
+
+    <!-- Settings: Stage alerts -->
+    <string name="settings_stage_alerts_title">התראות שלב</string>
+    <string name="settings_stage_alerts_subtitle">קבל התראה בכניסה לשלב צום חדש</string>
+
+    <string name="export_failed">ייצוא היומן נכשל</string>
+
+    <string name="intro_00_title">ברוכים הבאים ל-Fast Track!</string>
+    <string name="intro_00_description">על מה האפליקציה?</string>
+
+    <string name="intro_01_title">עזרה מוטיבציונית</string>
+    <string name="intro_01_description">הרעיון המרכזי של Fast Track הוא לעזור לך להישאר מונע במהלך הצומות ולהסביר מה גופך עושה בשלבים השונים של הצום.</string>
+
+    <string name="intro_02_title">אפליקציה חינמית פשוטה</string>
+    <string name="intro_02_description">Fast Track הייתה ותמיד תהיה חינמית וקוד פתוח. אין צורך ליצור חשבון, אין רכישות בתוך האפליקציה ואין פרסומות. ואין גם גישה לאינטרנט, כך שהיא לא יכולה לשלוח את המידע שלך לשום מקום.</string>
+
+    <string name="intro_03_title">צום לסירוגין</string>
+    <string name="intro_03_description">זהו תחום מחקר חדש המראה יתרונות רבים מעבר לירידה במשקל בלבד.\n\nלמידע על מה שידוע על צום ומה המחקר אומר, עיין בחלק המידע באפליקציה!</string>
+
+    <string name="intro_04_title">הישאר מונע עם התראות</string>
+    <string name="intro_04_description">Fast Track יכולה להציג התראות שיעזרו לך להישאר מונע במהלך הצום.\n\nתראה את זמן הצום הנוכחי, באיזה שלב אתה נמצא ובאיזה מצב אנרגיה גופך משתמש.\n\nזה עוזר לך להישאר על המסלול מבלי לפתוח את האפליקציה!</string>
+
+    <string name="intro_05_title">זהו!</string>
+    <string name="intro_05_description">עכשיו תתחיל לצום!</string>
+
+    <string name="about_name">Dark Rock Studios</string>
+    <string name="about_subtitle">פיתוח קוד פתוח</string>
+    <string name="about_brief">מטפס, מטייל בהרים, מהנדס תוכנה ותומך בקוד פתוח.</string>
+    <string name="about_discord">Discord</string>
+
+    <string name="title_fasting">צום</string>
+    <string name="title_log">יומן</string>
+    <string name="title_profile">פרופיל</string>
+
+    <string name="fasting_fragment_label">צום</string>
+    <string name="start_fast_button">התחל צום</string>
+    <string name="start_fast_now_button">התחל צום עכשיו</string>
+    <string name="end_fast_button">סיים צום</string>
+
+    <string name="fasting_energy_mode">מצב אנרגיה: %1$s</string>
+    <string name="fasting_energy_mode_glucose">גלוקוז</string>
+    <string name="fasting_energy_mode_fat">גופי קטון</string>
+
+    <string name="confirm_start_fast_title">להתחיל צום?</string>
+    <string name="confirm_start_fast_positive">עכשיו</string>
+    <string name="confirm_start_fast_neutral">כבר התחלתי</string>
+    <string name="confirm_start_fast_negative">לא</string>
+    <string name="already_started_dialog_title">כבר התחלתי</string>
+
+    <string name="start_picker_title">מתי התחלת את הצום</string>
+
+    <string name="confirm_end_fast_title">לסיים צום?</string>
+    <string name="confirm_end_fast_positive">עכשיו</string>
+    <string name="confirm_end_fast_neutral">כבר סיימתי?</string>
+    <string name="confirm_end_fast_negative">לא</string>
+    <string name="already_stopped_dialog_title">מתי הפסקת?</string>
+
+    <string name="menu_edit">ערוך</string>
+    <string name="menu_delete">מחק</string>
+    <string name="confirm_delete_fast_title">למחוק צום?</string>
+    <string name="confirm_delete_fast_positive">כן</string>
+    <string name="confirm_delete_fast_negative">לא</string>
+
+    <string name="fast_status_fasting">צום בתהליך</string>
+    <string name="fast_status_not_fasting">אינך צם</string>
+
+    <string name="next_stage">שלב הבא בשעה: %1$d</string>
+
+    <string name="start_fast_button_advanced">*</string>
+
+    <string name="log_entry_started">%1$s</string>
+    <string name="log_entry_length">%1$d שעות</string>
+    <string name="log_entry_ketosis">קטוזיס: %1$d שעות</string>
+    <string name="log_entry_autophagy">אוטופגיה: %1$d שעות</string>
+
+    <string name="profile_age_label">גיל</string>
+    <string name="profile_age_years">שנים</string>
+
+    <string name="profile_weight_label">משקל</string>
+    <string name="profile_weight_pounds_label">ליברות</string>
+    <string name="profile_weight_kg_label">קילוגרמים</string>
+
+    <string name="profile_update_button">עדכן</string>
+
+    <string name="profile_bmi_label">BMI:</string>
+    <string name="profile_bmi_value">%1$.1f - %2$s</string>
+    <string name="profile_bmi_category_underweight">תת משקל</string>
+    <string name="profile_bmi_category_normal">תקין</string>
+    <string name="profile_bmi_category_overweight">עודף משקל</string>
+    <string name="profile_bmi_category_obese">השמנת יתר</string>
+    <string name="profile_bmi_category_morbidly_obese">השמנה חולנית</string>
+
+    <string name="profile_error">ערך שגוי</string>
+
+    <string name="profile_bmr_label">BMR:</string>
+    <string name="profile_bmr_value">%.0f קלוריות / יום</string>
+
+    <string name="profile_height_label">גובה</string>
+    <string name="profile_height_imper_feet_label">רגל</string>
+    <string name="profile_height_imper_inches_label">אינץ\'</string>
+    <string name="profile_height_metric_label">סנטימטרים</string>
+    <string name="profile_gender_male">זכר</string>
+    <string name="profile_gender_female">נקבה</string>
+    <string name="manual_add_title">הוספה ידנית</string>
+    <string name="manual_edit_title">ערוך רשומה</string>
+    <string name="manual_add_length_hint">משך (שעות)</string>
+    <string name="manual_add_complete_button">הוסף</string>
+    <string name="manual_add_save_button">שמור</string>
+    <string name="manual_add_fast_started_on">הצום התחיל ב: %1$s</string>
+    <string name="manual_add_start_date_time_label">תאריך ושעת התחלה</string>
+    <string name="edit_date">ערוך תאריך</string>
+    <string name="edit_time">ערוך שעה</string>
+    <string name="manual_start_title">הצום התחיל</string>
+    <string name="manual_add_set_end_title">קבע סיום צום</string>
+    <string name="manual_add_set_end_complete">חשב</string>
+    <string name="fast_autophagy_label">אוטופגיה:</string>
+    <string name="fast_ketosis_label">קטוזיס:</string>
+    <string name="fast_fat_burn_label">שריפת שומן:</string>
+
+    <string name="stage_fasting_title">צום</string>
+    <string name="stage_fasting_description">גופך צורך את מאגרי הגלוקוז שלו, המשך!</string>
+
+    <string name="stage_fat_burning_title">שריפת שומן</string>
+    <string name="stage_fat_burning_description">מאגרי הגלוקוז שלך התרוקנו! גופך עכשיו שורף שומן לאנרגיה. אימון בשעתיים הקרובות יהיה אופטימלי.</string>
+
+    <string name="stage_fat_fasting_sweet_spot_title">נקודת המתיקות של הצום</string>
+    <string name="stage_fat_fasting_sweet_spot_description">אתה בנקודת המתיקות של הצום, המשך!</string>
+
+    <string name="stage_fat_peak_fat_burning_title">שיא שריפת השומן</string>
+    <string name="stage_fat_peak_fat_burning_description">גופך שורף שומן במהירות עכשיו, והקטוזיס החל.</string>
+
+    <string name="stage_autophagy_title">אוטופגיה</string>
+    <string name="stage_autophagy_description">גופך החל בתהליך האוטופגיה!</string>
+
+    <string name="stage_optimal_autophagy_title">אוטופגיה מיטבית</string>
+    <string name="stage_optimal_autophagy_description">האוטופגיה פועלת במלוא עוצמתה! המשך, בין עכשיו ל-72 שעות האוטופגיה תהיה יעילה מאוד.</string>
+
+    <string name="phase_glucose">שריפת גלוקוז</string>
+    <string name="phase_fat_burning">שריפת שומן</string>
+    <string name="phase_ketosis">קטוזיס</string>
+    <string name="phase_autophagy">אוטופגיה</string>
+    <string name="phase_optimal_autophagy">אוטופגיה מיטבית</string>
+
+    <string name="share_text">צמתי %1$d שעות ו-%2$d דקות! גופי כרגע צורך %3$s לאנרגיה.</string>
+    <string name="share_text_past_tense">צמתי %1$d שעות ו-%2$d דקות!</string>
+    <string name="stage_alerts_checkbox">התראות שלב</string>
+
+    <string name="notification_channel_name">התראות צום</string>
+    <string name="notification_channel_description">התראות שמודיעות לך כשנכנסת לשלב חדש בצום.</string>
+
+    <string name="notification_fat_burn_title">שלב צום: שריפת שומן</string>
+    <string name="notification_fat_burn_content">ניצלת את מאגרי הגלוקוז שלך וגופך עכשיו צורך שומן לאנרגיה.</string>
+
+    <string name="notification_ketosis_title">שלב צום: קטוזיס</string>
+    <string name="notification_ketosis_content">גופך פירק מספיק מאגרי שומן כך שהוא פועל עכשיו בעיקר על גופי קטון.</string>
+
+    <string name="notification_autophagy_title">שלב צום: אוטופגיה</string>
+    <string name="notification_autophagy_content">גופך נכנס לאוטופגיה. תאים ישנים או פגומים נצרכים עכשיו לאנרגיה.</string>
+
+    <string name="notification_optimal_autophagy_title">שלב צום: אוטופגיה מיטבית</string>
+    <string name="notification_optimal_autophagy_content">גופך היה באוטופגיה זמן רב, ובריאות התאים שלך נהנית מיתרונות גדולים.</string>
+
+    <string name="notification_fasting_channel_name">סטטוס צום</string>
+    <string name="notification_fasting_channel_description">התראה מתמשכת המציגה את סטטוס הצום והתקדמותך הנוכחית.</string>
+    <string name="notification_fasting_title">צום: %1$s שעות</string>
+    <string name="notification_fasting_energy_mode">מצב אנרגיה: %1$s</string>
+
+    <string name="info_dialog_fat_burn_title">שריפת שומן</string>
+    <string name="info_dialog_fat_burn_content">בשלב זה גופך ניצל את מאגרי הגלוקוז שלו. גלוקוז מאוחסן כגליקוגן לשימוש מאוחר, ובשלב זה רוב הגליקוגן האגור הפך לגלוקוז ונצרך לאנרגיה.\n\nעכשיו הגוף מתחיל לפרק רקמת שומן לגופי קטון. בנוסף לצריכת גלוקוז לאנרגיה, גופך יכול לצרוך גופי קטון לאנרגיה, וכאשר מאגרי הגלוקוז מתמעטים, גופך יעבור למצב אנרגיה של גופי קטון.</string>
+
+    <string name="info_dialog_ketosis_title">קטוזיס</string>
+    <string name="info_dialog_ketosis_content">בשלב זה גופך פירק שומן זמן מספיק כך שהוא מופעל בעיקר על ידי גופי קטון ולא גלוקוז.\n\nבנוסף ליתרונות ירידת המשקל, מחקרים הראו יתרונות לגבי מחלות הקשורות לדלקת, אם כי המנגנון לכך אינו ידוע עדיין.</string>
+
+    <string name="info_dialog_autophagy_title">אוטופגיה</string>
+    <string name="info_dialog_autophagy_content">בשלב זה גופך החל להפעיל תהליכים נוספים לקצירת אנרגיה. בנוסף לפירוק רקמת שומן לגופי קטון, הוא החל לחפש תאים ישנים או פגומים ולצרוך אותם לאנרגיה.\n\nהמחקר בתחום זה עדיין בתחילתו, אך נראה שזהו מנגנון חשוב למניעת בעיות. שיעורי סרטן נמוכים יותר אצל אנשים שנכנסים לאוטופגיה באופן קבוע, וכן מחקרים הראו שיעורים נמוכים יותר של מחלת אלצהיימר.</string>
+
+    <string name="info_dialog_bmi_title">מדד מסת הגוף (BMI)</string>
+    <string name="info_dialog_bmi_content">הערכה גסה של המשקל הבריא לאדם ממוצע. הוא מחושב על ידי חלוקת המשקל בגובה בריבוע.\n\nמבוקר לעיתים על אי-דיוק — למשל עבור בוני גוף עם שרירים רבים, או אנשים גבוהים ונמוכים מאוד. אך עבור רוב האנשים זוהי הערכה טובה מספיק לדעת אם אתה בטווח משקל בריא.</string>
+
+    <string name="info_dialog_bmr_title">קצב חילוף חומרים בסיסי (BMR)</string>
+    <string name="info_dialog_bmr_content">הערכה של מספר הקלוריות שגופך שורף ביום במנוחה מלאה. אם כל מה שעשית הוא לשכב במיטה כל היום, כך כמה קלוריות תוכל לאכול מבלי לעלות במשקל.\n\nזהו מספר קריטי לאנשים שמגבילים את צריכת הקלוריות היומית לצורך ירידה במשקל.</string>
+
+    <string name="info_dialog_positive">מגניב!</string>
+
+    <string name="info_page_title_info">מידע</string>
+    <string name="info_page_title_tips">טיפים</string>
+
+    <string name="title_activity_info">מידע על צום</string>
+    <string name="log_total_autophagy">🧬 אוטופגיה:</string>
+    <string name="log_total_ketosis">🔥 קטוזיס:</string>
+    <string name="log_total_hours">%1$d שעות</string>
+    <string name="profile_metric_switch">מטרי</string>
+    <string name="title_activity_intro">מבוא</string>
+    <string name="app_widget_description">עקוב אחר התקדמות הצום ממסך הבית</string>
+    <string name="app_widget_not_fasting">לא צם</string>
+    <string name="app_widget_fast_in_progress">צום בתהליך</string>
+    <string name="app_widget_time">%1$d שעות</string>
+    <string name="app_widget_time_compact">%1$d ש\'</string>
+    <string name="app_widget_start_fast_button">התחל צום</string>
+    <string name="app_widget_stop_fast_button">סיים צום</string>
+    <string name="app_widget_start_compact">התחל</string>
+    <string name="app_widget_start">לחץ להתחלה</string>
+    <string name="close_button_content_description">סגור</string>
+    <string name="cancel_button">ביטול</string>
+    <string name="next_button">הבא</string>
+    <string name="previous_button">הקודם</string>
+    <string name="skip_button">דלג</string>
+    <string name="done_button">סיום</string>
+    <string name="debug_add_hour_button">ניפוי: הוסף שעה</string>
+    <string name="stop_fast_button_description">סיים צום</string>
+    <string name="start_fast_button_description">התחל צום</string>
+    <string name="bmi_info_button_description">מידע BMI</string>
+    <string name="bmr_info_button_description">מידע BMR</string>
+    <string name="profile_gender_label">מין</string>
+    <string name="more_options_button_description">אפשרויות נוספות</string>
+    <string name="manual_add_close_button_description">סגור</string>
+    <string name="manual_add_selected_start">התחיל: %1$s</string>
+    <string name="manual_add_cancel_button">ביטול</string>
+    <string name="manual_add_next_button">הבא</string>
+    <string name="manual_add_calculate_from_end">חשב מסיום</string>
+    <string name="action_settings">הגדרות</string>
+    <string name="title_activity_settings">הגדרות</string>
+    <string name="settings_placeholder">הגדרות בקרוב</string>
+    <string name="back">חזור</string>
+    <string name="settings_fancy_background_title">הצג רקע מעוצב</string>
+    <string name="settings_fancy_background_subtitle">כבה לרקע פשוט יותר במסך הצום</string>
+    <string name="settings_metric_system_title">מערכת מטרית</string>
+    <string name="settings_metric_system_subtitle">הצג גובה ומשקל ביחידות מטריות</string>
+    <string name="settings_theme_mode_title">ערכת נושא</string>
+    <string name="settings_theme_mode_subtitle">בחר בהיר, כהה, או מעקב אחר המערכת</string>
+    <string name="settings_theme_mode_system">מערכת</string>
+    <string name="settings_theme_mode_light">בהיר</string>
+    <string name="settings_theme_mode_dark">כהה</string>
+    <string name="log_no_entries">אין רשומות עדיין!</string>
+    <string name="log_logbook_label">יומן</string>
+    <string name="log_stats_label">סטטיסטיקה לכל החיים</string>
+    <string name="log_view_mode_list">רשימה</string>
+    <string name="log_view_mode_calendar">לוח שנה</string>
+
+    <!-- Food log -->
+    <string name="title_food">אוכל</string>
+    <string name="food_add_title">הוסף רשומת אוכל</string>
+    <string name="food_edit_title">ערוך רשומת אוכל</string>
+    <string name="food_description_hint">מה אכלת?</string>
+    <string name="food_date_label">תאריך</string>
+    <string name="food_time_label">שעה</string>
+    <string name="food_calories_hint">קלוריות (אופציונלי)</string>
+    <string name="food_calories_placeholder">למשל 350</string>
+    <string name="food_add_button">הוסף</string>
+    <string name="food_copy_prompt_button">העתק פרומפט</string>
+    <string name="food_paste_response_button">הדבק תגובת AI</string>
+    <string name="food_paste_title">הדבק תגובת AI</string>
+    <string name="food_paste_description">הדבק את תגובת ה-JSON מהעוזר החכם להחלת הערכות קלוריות.</string>
+    <string name="food_paste_hint">הדבק JSON כאן…</string>
+    <string name="food_paste_apply_button">החל</string>
+    <string name="food_paste_error">פורמט JSON לא חוקי. בדוק ונסה שוב.</string>
+    <string name="food_empty_state">אין רשומות אוכל עדיין.\nלחץ + כדי לתעד מה אכלת.</string>
+    <string name="food_empty_day_state">לא תועד אוכל ליום זה.\nלחץ + להוספת רשומה.</string>
+    <string name="food_day_today">היום</string>
+    <string name="food_day_yesterday">אתמול</string>
+    <string name="food_total_calories_label">סה"כ קלוריות משוערות</string>
+    <string name="food_total_calories_value">%1$d קלוריות</string>
+
+    <!-- Schedule -->
+    <string name="title_schedule">לו"ז צום</string>
+    <string name="schedule_add_button">הוסף לוח זמנים</string>
+    <string name="schedule_pick_template_title">בחר תבנית</string>
+    <string name="schedule_configure_title">הגדר לוח זמנים</string>
+    <string name="schedule_name_label">שם לוח הזמנים</string>
+    <string name="schedule_fasting_hours_label">שעות צום (1–23)</string>
+    <string name="schedule_eating_window_computed">חלון אכילה: %1$d שעות</string>
+    <string name="schedule_eat_start_label">חלון האכילה מתחיל ב</string>
+    <string name="schedule_save_button">שמור</string>
+    <string name="schedule_empty_state">אין לוחות זמנים עדיין.\nלחץ + להוספה.</string>
+    <string name="schedule_my_schedules_label">לוחות הזמנים שלי</string>
+    <string name="schedule_active_label">לוח זמנים פעיל</string>
+    <string name="schedule_deactivate_button">בטל הפעלה</string>
+    <string name="schedule_eat_window_label">אכילה</string>
+    <string name="schedule_fast_window_label">צום</string>
+    <string name="schedule_eat_time_label">חלון</string>
+    <string name="schedule_card_detail">צום %1$dש\'  ·  אכילה %2$dש\'  ·  %3$s – %4$s</string>
+    <string name="schedule_weekly_plan_label">תכנית שבועית</string>
+    <string name="schedule_rest_day">יום מנוחה</string>
+    <string name="schedule_pick_day_title">%1$s — בחר לוח זמנים</string>
+    <string name="schedule_apply_button">החל</string>
+    <string name="schedule_add_new_option">הוסף לוח זמנים חדש…</string>
+</resources>
