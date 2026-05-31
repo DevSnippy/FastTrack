@@ -67,6 +67,7 @@ fun CompetitionScreen(
 				onPasswordChanged = viewModel::onPasswordChanged,
 				onLogin = viewModel::login,
 				onRegister = viewModel::register,
+				onClearError = viewModel::clearError,
 			)
 		} else {
 			CompetitionDashboard(
@@ -103,6 +104,7 @@ private fun AuthForm(
 	onPasswordChanged: (String) -> Unit,
 	onLogin: () -> Unit,
 	onRegister: () -> Unit,
+	onClearError: () -> Unit = {},
 ) {
 	Column(
 		modifier = Modifier
@@ -175,6 +177,21 @@ private fun AuthForm(
 		if (uiState.isLoading) {
 			Spacer(Modifier.height(16.dp))
 			LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+		}
+
+		uiState.error?.let { err ->
+			Spacer(Modifier.height(12.dp))
+			Card(
+				colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+				modifier = Modifier.fillMaxWidth(),
+			) {
+				Text(
+					text = err,
+					color = MaterialTheme.colorScheme.onErrorContainer,
+					style = MaterialTheme.typography.bodySmall,
+					modifier = Modifier.padding(12.dp),
+				)
+			}
 		}
 	}
 }

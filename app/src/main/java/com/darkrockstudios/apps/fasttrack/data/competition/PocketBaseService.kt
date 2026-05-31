@@ -72,20 +72,30 @@ class PocketBaseService {
 
 	private fun HttpURLConnection.readResponse(): JSONObject {
 		val code = responseCode
-		val text = (if (code in 200..299) inputStream else errorStream)
-			.bufferedReader().readText()
+		val text = try {
+			(if (code in 200..299) inputStream else errorStream)
+				?.bufferedReader()?.readText() ?: ""
+		} catch (e: Exception) {
+			""
+		}
 		disconnect()
-		if (code !in 200..299) throw Exception(
-			JSONObject(text).optString("message", "HTTP $code")
-		)
-		return JSONObject(text)
+		if (code !in 200..299) {
+			val msg = runCatching { JSONObject(text).optString("message") }
+				.getOrNull()?.takeIf { it.isNotBlank() } ?: "HTTP $code"
+			throw Exception(msg)
+		}
+		return if (text.isBlank()) JSONObject() else JSONObject(text)
 	}
 
 	// ─── Auth ─────────────────────────────────────────────────────────────────
 
+	// PocketBase requires an email field. We derive one from the username so
+	// users only have to remember their username.
+	private fun emailFor(username: String) = "$username@fasttrack.app"
+
 	suspend fun login(baseUrl: String, username: String, password: String): PbAuthSession {
 		val body = JSONObject().apply {
-			put("identity", username)
+			put("identity", emailFor(username))
 			put("password", password)
 		}
 		val resp = post(baseUrl, "/api/collections/users/auth-with-password", body)
@@ -98,6 +108,8 @@ class PocketBaseService {
 	suspend fun register(baseUrl: String, username: String, password: String): PbAuthSession {
 		val body = JSONObject().apply {
 			put("username", username)
+			put("email", emailFor(username))
+			put("emailVisibility", false)
 			put("password", password)
 			put("passwordConfirm", password)
 		}
