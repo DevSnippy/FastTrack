@@ -294,6 +294,7 @@
 	<string name="bmr_info_button_description">BMR Info</string>
 	<string name="profile_gender_label">Gender</string>
 	<string name="more_options_button_description">More options</string>
+	<string name="nav_drawer_open">Open menu</string>
 	<string name="manual_add_close_button_description">Close</string>
 	<string name="manual_add_selected_start">Started: %1$s</string>
 	<string name="manual_add_cancel_button">Cancel</string>

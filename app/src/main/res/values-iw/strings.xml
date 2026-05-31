@@ -240,6 +240,7 @@
     <string name="bmr_info_button_description">מידע BMR</string>
     <string name="profile_gender_label">מין</string>
     <string name="more_options_button_description">אפשרויות נוספות</string>
+    <string name="nav_drawer_open">פתח תפריט</string>
     <string name="manual_add_close_button_description">סגור</string>
     <string name="manual_add_selected_start">התחיל: %1$s</string>
     <string name="manual_add_cancel_button">ביטול</string>
