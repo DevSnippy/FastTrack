@@ -80,8 +80,16 @@ class PocketBaseService {
 		}
 		disconnect()
 		if (code !in 200..299) {
-			val msg = runCatching { JSONObject(text).optString("message") }
-				.getOrNull()?.takeIf { it.isNotBlank() } ?: "HTTP $code"
+			val json = runCatching { JSONObject(text) }.getOrNull()
+			// Try to extract field-level validation errors first (most useful)
+			val fieldErrors = json?.optJSONObject("data")?.let { data ->
+				data.keys().asSequence().mapNotNull { key ->
+					data.optJSONObject(key)?.optString("message")?.let { "$key: $it" }
+				}.joinToString("\n")
+			}
+			val msg = fieldErrors?.takeIf { it.isNotBlank() }
+				?: json?.optString("message")?.takeIf { it.isNotBlank() }
+				?: "HTTP $code"
 			throw Exception(msg)
 		}
 		return if (text.isBlank()) JSONObject() else JSONObject(text)
@@ -107,11 +115,10 @@ class PocketBaseService {
 
 	suspend fun register(baseUrl: String, username: String, password: String): PbAuthSession {
 		val body = JSONObject().apply {
-			put("username", username)
 			put("email", emailFor(username))
-			put("emailVisibility", false)
 			put("password", password)
 			put("passwordConfirm", password)
+			put("name", username)          // PocketBase's optional display name field
 		}
 		post(baseUrl, "/api/collections/users/records", body)
 		return login(baseUrl, username, password)

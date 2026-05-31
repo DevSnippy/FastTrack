@@ -319,6 +319,7 @@
     <string name="competition_server_url_label">כתובת שרת</string>
     <string name="competition_username_label">שם משתמש</string>
     <string name="competition_password_label">סיסמה</string>
+    <string name="competition_password_hint">מינימום 8 תווים</string>
     <string name="competition_login_button">התחבר</string>
     <string name="competition_register_button">הרש��ה</string>
     <string name="competition_logout_button">התנתק</string>

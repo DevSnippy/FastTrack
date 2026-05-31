@@ -373,6 +373,7 @@
 	<string name="competition_server_url_label">Server URL</string>
 	<string name="competition_username_label">Username</string>
 	<string name="competition_password_label">Password</string>
+	<string name="competition_password_hint">Minimum 8 characters</string>
 	<string name="competition_login_button">Log In</string>
 	<string name="competition_register_button">Sign Up</string>
 	<string name="competition_logout_button">Log out</string>

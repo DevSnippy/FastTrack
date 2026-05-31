@@ -153,6 +153,7 @@ private fun AuthForm(
 			singleLine = true,
 			visualTransformation = PasswordVisualTransformation(),
 			keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+			supportingText = { Text(stringResource(R.string.competition_password_hint)) },
 		)
 		Spacer(Modifier.height(24.dp))
 
