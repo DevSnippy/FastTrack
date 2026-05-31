@@ -35,10 +35,20 @@ class CompetitionViewModel(
 					isAuthenticated = true,
 					username = repository.getStoredUsername() ?: "",
 					friendCode = repository.getStoredFriendCode() ?: "",
+					isLoading = true,
 				)
 			}
-			refreshLeaderboard()
-			syncStats()
+			viewModelScope.launch {
+				repository.loadProfile()
+					.onSuccess { profile ->
+						_uiState.update { it.copy(friendCode = profile.friendCode, isLoading = false) }
+					}
+					.onFailure { e ->
+						_uiState.update { it.copy(isLoading = false, error = e.message) }
+					}
+				refreshLeaderboard()
+				syncStats()
+			}
 		}
 	}
 

@@ -32,17 +32,20 @@ class CompetitionRepositoryImpl(
 			local.setToken(session.token)
 			local.setUserId(session.userId)
 			local.setUsername(username)
-			val friendCode = generateFriendCode()
-			val profile = service.createProfile(serverUrl, session.userId, friendCode, session.token)
-			local.setFriendCode(profile.friendCode)
-			local.setProfileId(profile.id)
+			loadProfile().getOrThrow()
 		}
 
 	override fun logout() = local.clear()
 
+	// Loads the profile, auto-creating it if it doesn't exist yet.
 	override suspend fun loadProfile(): Result<PbProfile> = runCatching {
-		val profile = service.getMyProfile(url(), local.getUserId()!!, token())
-			?: error("Profile not found")
+		val existing = service.getMyProfile(url(), local.getUserId()!!, token())
+		val profile = if (existing != null) {
+			existing
+		} else {
+			val code = local.getFriendCode() ?: generateFriendCode()
+			service.createProfile(url(), local.getUserId()!!, code, token())
+		}
 		local.setFriendCode(profile.friendCode)
 		local.setProfileId(profile.id)
 		profile
