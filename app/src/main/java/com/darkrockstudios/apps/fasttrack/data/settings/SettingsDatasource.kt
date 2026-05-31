@@ -30,4 +30,8 @@ interface SettingsDatasource {
 
 	fun getOnlineSharing(): Boolean
 	fun setOnlineSharing(enabled: Boolean)
+	fun onlineSharingFlow(): Flow<Boolean>
+
+	fun getPocketBaseUrl(): String
+	fun setPocketBaseUrl(url: String)
 }

@@ -311,4 +311,24 @@
     <string name="schedule_pick_day_title">%1$s — בחר לוח זמנים</string>
     <string name="schedule_apply_button">החל</string>
     <string name="schedule_add_new_option">הוסף לוח זמנים חדש…</string>
+
+    <!-- Competition -->
+    <string name="title_competition">תחרות</string>
+    <string name="competition_title">תחרות Fast Track</string>
+    <string name="competition_auth_subtitle">התחבר או צור חשבון כדי להת��רות עם חברים.</string>
+    <string name="competition_server_url_label">כתובת שרת</string>
+    <string name="competition_username_label">שם משתמש</string>
+    <string name="competition_password_label">סיסמה</string>
+    <string name="competition_login_button">התחבר</string>
+    <string name="competition_register_button">הרש��ה</string>
+    <string name="competition_logout_button">התנתק</string>
+    <string name="competition_friend_code_label">קוד החבר שלך</string>
+    <string name="competition_copy_code">העתק קוד חבר</string>
+    <string name="competition_add_friend_label">הוסף חבר</string>
+    <string name="competition_add_friend_hint">הכנס קוד חבר…</string>
+    <string name="competition_add_button">הוסף</string>
+    <string name="competition_friend_added">החבר נוסף! ✓</string>
+    <string name="competition_leaderboard_label">לוח תוצאות</string>
+    <string name="competition_leaderboard_empty">אין חברים עדיין.\nשתף את הקוד שלך כדי להזמינם!</string>
+    <string name="competition_refresh">רענן לוח תוצאות</string>
 </resources>

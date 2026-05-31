@@ -365,4 +365,24 @@
 	<string name="schedule_pick_day_title">%1$s — Choose Schedule</string>
 	<string name="schedule_apply_button">Apply</string>
 	<string name="schedule_add_new_option">Add new schedule…</string>
+
+	<!-- Competition -->
+	<string name="title_competition">Competition</string>
+	<string name="competition_title">Fast Track Competition</string>
+	<string name="competition_auth_subtitle">Sign in or create an account to compete with friends.</string>
+	<string name="competition_server_url_label">Server URL</string>
+	<string name="competition_username_label">Username</string>
+	<string name="competition_password_label">Password</string>
+	<string name="competition_login_button">Log In</string>
+	<string name="competition_register_button">Sign Up</string>
+	<string name="competition_logout_button">Log out</string>
+	<string name="competition_friend_code_label">Your friend code</string>
+	<string name="competition_copy_code">Copy friend code</string>
+	<string name="competition_add_friend_label">Add a friend</string>
+	<string name="competition_add_friend_hint">Enter friend code…</string>
+	<string name="competition_add_button">Add</string>
+	<string name="competition_friend_added">Friend added! ✓</string>
+	<string name="competition_leaderboard_label">Leaderboard</string>
+	<string name="competition_leaderboard_empty">No friends yet.\nShare your code to invite them!</string>
+	<string name="competition_refresh">Refresh leaderboard</string>
 </resources>

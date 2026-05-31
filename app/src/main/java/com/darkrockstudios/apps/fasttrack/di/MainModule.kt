@@ -24,6 +24,13 @@ import com.darkrockstudios.apps.fasttrack.screens.fasting.FastingViewModel
 import com.darkrockstudios.apps.fasttrack.screens.fasting.IFastingViewModel
 import com.darkrockstudios.apps.fasttrack.screens.food.FoodViewModel
 import com.darkrockstudios.apps.fasttrack.screens.food.IFoodViewModel
+import com.darkrockstudios.apps.fasttrack.data.competition.CompetitionLocalStorage
+import com.darkrockstudios.apps.fasttrack.data.competition.CompetitionLocalStorageImpl
+import com.darkrockstudios.apps.fasttrack.data.competition.CompetitionRepository
+import com.darkrockstudios.apps.fasttrack.data.competition.CompetitionRepositoryImpl
+import com.darkrockstudios.apps.fasttrack.data.competition.PocketBaseService
+import com.darkrockstudios.apps.fasttrack.screens.competition.CompetitionViewModel
+import com.darkrockstudios.apps.fasttrack.screens.competition.ICompetitionViewModel
 import com.darkrockstudios.apps.fasttrack.screens.schedule.IScheduleViewModel
 import com.darkrockstudios.apps.fasttrack.screens.schedule.ScheduleViewModel
 import com.darkrockstudios.apps.fasttrack.screens.log.ILogViewModel
@@ -69,4 +76,9 @@ val mainModule = module {
 	viewModelOf(::ManualAddViewModel) bind IManualAddViewModel::class
 	viewModelOf(::FoodViewModel) bind IFoodViewModel::class
 	viewModelOf(::ScheduleViewModel) bind IScheduleViewModel::class
+
+	singleOf(::PocketBaseService)
+	single<CompetitionLocalStorage> { CompetitionLocalStorageImpl(get()) }
+	singleOf(::CompetitionRepositoryImpl) bind CompetitionRepository::class
+	viewModelOf(::CompetitionViewModel) bind ICompetitionViewModel::class
 }

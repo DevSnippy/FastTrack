@@ -100,4 +100,20 @@ class SettingsPreferencesDatasource(
 	override fun setOnlineSharing(enabled: Boolean) {
 		storage.edit { putBoolean(Data.KEY_ONLINE_SHARING, enabled) }
 	}
+
+	override fun onlineSharingFlow(): Flow<Boolean> = callbackFlow {
+		trySend(storage.getBoolean(Data.KEY_ONLINE_SHARING, false))
+		val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+			if (key == Data.KEY_ONLINE_SHARING) trySend(storage.getBoolean(Data.KEY_ONLINE_SHARING, false))
+		}
+		storage.registerOnSharedPreferenceChangeListener(listener)
+		awaitClose { storage.unregisterOnSharedPreferenceChangeListener(listener) }
+	}
+
+	override fun getPocketBaseUrl(): String =
+		storage.getString(Data.KEY_POCKETBASE_URL, "http://10.0.2.2:8090") ?: "http://10.0.2.2:8090"
+
+	override fun setPocketBaseUrl(url: String) {
+		storage.edit { putString(Data.KEY_POCKETBASE_URL, url) }
+	}
 }

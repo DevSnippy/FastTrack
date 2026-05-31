@@ -45,6 +45,8 @@ class DummySettingsDatasource(
 	override fun setLogViewMode(mode: LogViewMode) {}
 
 	override fun getOnlineSharing(): Boolean = false
-
 	override fun setOnlineSharing(enabled: Boolean) {}
+	override fun onlineSharingFlow(): Flow<Boolean> = flowOf(false)
+	override fun getPocketBaseUrl(): String = "http://10.0.2.2:8090"
+	override fun setPocketBaseUrl(url: String) {}
 }

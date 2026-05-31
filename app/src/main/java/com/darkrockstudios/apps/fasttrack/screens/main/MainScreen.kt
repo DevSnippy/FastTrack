@@ -21,6 +21,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.darkrockstudios.apps.fasttrack.R
 import com.darkrockstudios.apps.fasttrack.data.activefast.ActiveFastRepository
+import com.darkrockstudios.apps.fasttrack.data.settings.SettingsDatasource
+import com.darkrockstudios.apps.fasttrack.screens.competition.CompetitionScreen
 import com.darkrockstudios.apps.fasttrack.screens.fasting.ExternalRequests
 import com.darkrockstudios.apps.fasttrack.screens.fasting.FastingScreen
 import com.darkrockstudios.apps.fasttrack.screens.food.FoodScreen
@@ -29,6 +31,7 @@ import com.darkrockstudios.apps.fasttrack.screens.profile.ProfileScreen
 import com.darkrockstudios.apps.fasttrack.screens.schedule.ScheduleScreen
 import com.darkrockstudios.apps.fasttrack.utils.Utils
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import kotlin.time.ExperimentalTime
 
 enum class ScreenPages {
@@ -36,20 +39,8 @@ enum class ScreenPages {
 	Log,
 	Profile,
 	Food,
-	Schedule;
-
-	companion object {
-		fun fromOrdinal(ordinal: Int): ScreenPages {
-			return when (ordinal) {
-				0 -> Fasting
-				1 -> Log
-				2 -> Profile
-				3 -> Food
-				4 -> Schedule
-				else -> throw IllegalArgumentException("Invalid ordinal")
-			}
-		}
-	}
+	Schedule,
+	Competition;
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -63,10 +54,17 @@ fun MainScreen(
 	onSettingsClick: () -> Unit,
 	externalRequests: ExternalRequests = ExternalRequests(),
 ) {
-	val pagerState =
-		rememberPagerState(
-			initialPage = ScreenPages.Fasting.ordinal,
-			pageCount = { ScreenPages.entries.size })
+	val settings = koinInject<SettingsDatasource>()
+	val onlineEnabled by settings.onlineSharingFlow().collectAsState(initial = settings.getOnlineSharing())
+
+	val visiblePages = remember(onlineEnabled) {
+		ScreenPages.entries.filter { it != ScreenPages.Competition || onlineEnabled }
+	}
+
+	val pagerState = rememberPagerState(
+		initialPage = 0,
+		pageCount = { visiblePages.size },
+	)
 	val coroutineScope = rememberCoroutineScope()
 
 	var showMenu by remember { mutableStateOf(false) }
@@ -77,19 +75,28 @@ fun MainScreen(
 	val profileTitle = stringResource(id = R.string.title_profile)
 	val foodTitle = stringResource(id = R.string.title_food)
 	val scheduleTitle = stringResource(id = R.string.title_schedule)
+	val competitionTitle = stringResource(id = R.string.title_competition)
 
-	val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-	val compactHeight = windowSizeClass.minHeightDp < windowSizeClass.minWidthDp
-
-	val currentTitle = remember(pagerState.currentPage, fastingTitle, logTitle, profileTitle, foodTitle, scheduleTitle) {
-		when (ScreenPages.fromOrdinal(pagerState.currentPage)) {
-			ScreenPages.Fasting -> fastingTitle
-			ScreenPages.Log -> logTitle
-			ScreenPages.Profile -> profileTitle
-			ScreenPages.Food -> foodTitle
-			ScreenPages.Schedule -> scheduleTitle
-		}
+	fun pageTitle(page: ScreenPages) = when (page) {
+		ScreenPages.Fasting -> fastingTitle
+		ScreenPages.Log -> logTitle
+		ScreenPages.Profile -> profileTitle
+		ScreenPages.Food -> foodTitle
+		ScreenPages.Schedule -> scheduleTitle
+		ScreenPages.Competition -> competitionTitle
 	}
+
+	fun pageIcon(page: ScreenPages) = when (page) {
+		ScreenPages.Fasting -> R.drawable.ic_fasting
+		ScreenPages.Log -> R.drawable.ic_log
+		ScreenPages.Profile -> R.drawable.ic_profile
+		ScreenPages.Food -> R.drawable.ic_food
+		ScreenPages.Schedule -> R.drawable.ic_schedule
+		ScreenPages.Competition -> R.drawable.ic_competition
+	}
+
+	val currentPage = visiblePages.getOrNull(pagerState.currentPage) ?: ScreenPages.Fasting
+	val currentTitle = pageTitle(currentPage)
 
 	LaunchedEffect(repository.isFasting()) {
 		shareEnabled.value = repository.getFastStart() != null
@@ -103,262 +110,92 @@ fun MainScreen(
 					titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
 					actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
 				),
-				modifier = Modifier.Companion
-					.fillMaxWidth()
-					.background(MaterialTheme.colorScheme.primary),
+				modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.primary),
 				title = {
-					Text(
-						text = currentTitle,
-						style = MaterialTheme.typography.headlineMedium,
-					)
+					Text(text = currentTitle, style = MaterialTheme.typography.headlineMedium)
 				},
 				actions = {
-					IconButton(
-						onClick = onShareClick,
-						enabled = shareEnabled.value
-					) {
-						Icon(
-							imageVector = Icons.Default.Share,
-							contentDescription = stringResource(id = R.string.action_share),
-						)
+					IconButton(onClick = onShareClick, enabled = shareEnabled.value) {
+						Icon(Icons.Default.Share, contentDescription = stringResource(R.string.action_share))
 					}
-
 					IconButton(onClick = onInfoClick) {
-						Icon(
-							imageVector = Icons.Default.Info,
-							contentDescription = stringResource(id = R.string.action_info),
-						)
+						Icon(Icons.Default.Info, contentDescription = stringResource(R.string.action_info))
 					}
-
 					IconButton(onClick = { showMenu = !showMenu }) {
-						Icon(
-							imageVector = Icons.Default.MoreVert,
-							contentDescription = stringResource(id = R.string.more_options_button_description),
+						Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more_options_button_description))
+					}
+					DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+						DropdownMenuItem(
+							text = { Text(stringResource(R.string.action_about)) },
+							onClick = { onAboutClick(); showMenu = false },
+						)
+						DropdownMenuItem(
+							text = { Text(stringResource(R.string.action_settings)) },
+							onClick = { onSettingsClick(); showMenu = false },
 						)
 					}
-
-					DropdownMenu(
-						expanded = showMenu,
-						onDismissRequest = { showMenu = false }
-					) {
-						DropdownMenuItem(
-							text = { Text(stringResource(id = R.string.action_about)) },
-							onClick = {
-								onAboutClick()
-								showMenu = false
-							},
-						)
-
-						DropdownMenuItem(
-							text = { Text(stringResource(id = R.string.action_settings)) },
-							onClick = {
-								onSettingsClick()
-								showMenu = false
-							},
-						)
-					}
-				}
+				},
 			)
 		},
 		bottomBar = {
-			if (compactHeight.not()) {
+			val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+			val compactHeight = windowSizeClass.minHeightDp < windowSizeClass.minWidthDp
+			if (!compactHeight) {
 				NavigationBar(
-					modifier = Modifier.Companion
-						.background(MaterialTheme.colorScheme.primary)
-						.fillMaxWidth()
+					modifier = Modifier.background(MaterialTheme.colorScheme.primary).fillMaxWidth()
 				) {
-					NavigationBarItem(
-						icon = {
-							Icon(
-								painter = painterResource(id = R.drawable.ic_fasting),
-								contentDescription = fastingTitle,
-							)
-						},
-						label = { Text(fastingTitle) },
-						selected = pagerState.currentPage == ScreenPages.Fasting.ordinal,
-						onClick = {
-							coroutineScope.launch {
-								pagerState.animateScrollToPage(0)
-							}
-						}
-					)
-
-					NavigationBarItem(
-						icon = {
-							Icon(
-								painter = painterResource(id = R.drawable.ic_log),
-								contentDescription = logTitle
-							)
-						},
-						label = { Text(logTitle) },
-						selected = pagerState.currentPage == 1,
-						onClick = {
-							coroutineScope.launch {
-								pagerState.animateScrollToPage(1)
-							}
-						}
-					)
-
-					NavigationBarItem(
-						icon = {
-							Icon(
-								painter = painterResource(id = R.drawable.ic_profile),
-								contentDescription = profileTitle
-							)
-						},
-						label = { Text(profileTitle) },
-						selected = pagerState.currentPage == 2,
-						onClick = {
-							coroutineScope.launch {
-								pagerState.animateScrollToPage(2)
-							}
-						}
-					)
-
-					NavigationBarItem(
-						icon = {
-							Icon(
-								painter = painterResource(id = R.drawable.ic_food),
-								contentDescription = foodTitle
-							)
-						},
-						label = { Text(foodTitle) },
-						selected = pagerState.currentPage == ScreenPages.Food.ordinal,
-						onClick = {
-							coroutineScope.launch {
-								pagerState.animateScrollToPage(ScreenPages.Food.ordinal)
-							}
-						}
-					)
-
-					NavigationBarItem(
-						icon = {
-							Icon(
-								painter = painterResource(id = R.drawable.ic_schedule),
-								contentDescription = scheduleTitle
-							)
-						},
-						label = { Text(scheduleTitle) },
-						selected = pagerState.currentPage == ScreenPages.Schedule.ordinal,
-						onClick = {
-							coroutineScope.launch {
-								pagerState.animateScrollToPage(ScreenPages.Schedule.ordinal)
-							}
-						}
-					)
+					visiblePages.forEachIndexed { index, page ->
+						NavigationBarItem(
+							icon = {
+								Icon(painterResource(pageIcon(page)), contentDescription = pageTitle(page))
+							},
+							label = { Text(pageTitle(page)) },
+							selected = pagerState.currentPage == index,
+							onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
+						)
+					}
 				}
 			}
-		}
+		},
 	) { paddingValues ->
-		if (compactHeight) {
+		val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+		val compactHeight = windowSizeClass.minHeightDp < windowSizeClass.minWidthDp
 
+		if (compactHeight) {
 			Row(
 				modifier = Modifier
 					.padding(top = paddingValues.calculateTopPadding())
 					.fillMaxSize()
 			) {
 				NavigationRail {
-					NavigationRailItem(
-						icon = {
-							Icon(
-								painter = painterResource(id = R.drawable.ic_fasting),
-								contentDescription = fastingTitle,
-							)
-						},
-						label = { Text(fastingTitle) },
-						selected = pagerState.currentPage == 0,
-						onClick = {
-							coroutineScope.launch {
-								pagerState.animateScrollToPage(0)
-							}
-						}
-					)
-
-					NavigationRailItem(
-						icon = {
-							Icon(
-								painter = painterResource(id = R.drawable.ic_log),
-								contentDescription = logTitle
-							)
-						},
-						label = { Text(logTitle) },
-						selected = pagerState.currentPage == 1,
-						onClick = {
-							coroutineScope.launch {
-								pagerState.animateScrollToPage(1)
-							}
-						}
-					)
-
-					NavigationRailItem(
-						icon = {
-							Icon(
-								painter = painterResource(id = R.drawable.ic_profile),
-								contentDescription = profileTitle
-							)
-						},
-						label = { Text(profileTitle) },
-						selected = pagerState.currentPage == 2,
-						onClick = {
-							coroutineScope.launch {
-								pagerState.animateScrollToPage(2)
-							}
-						}
-					)
-
-					NavigationRailItem(
-						icon = {
-							Icon(
-								painter = painterResource(id = R.drawable.ic_food),
-								contentDescription = foodTitle
-							)
-						},
-						label = { Text(foodTitle) },
-						selected = pagerState.currentPage == ScreenPages.Food.ordinal,
-						onClick = {
-							coroutineScope.launch {
-								pagerState.animateScrollToPage(ScreenPages.Food.ordinal)
-							}
-						}
-					)
-
-					NavigationRailItem(
-						icon = {
-							Icon(
-								painter = painterResource(id = R.drawable.ic_schedule),
-								contentDescription = scheduleTitle
-							)
-						},
-						label = { Text(scheduleTitle) },
-						selected = pagerState.currentPage == ScreenPages.Schedule.ordinal,
-						onClick = {
-							coroutineScope.launch {
-								pagerState.animateScrollToPage(ScreenPages.Schedule.ordinal)
-							}
-						}
-					)
+					visiblePages.forEachIndexed { index, page ->
+						NavigationRailItem(
+							icon = { Icon(painterResource(pageIcon(page)), contentDescription = pageTitle(page)) },
+							label = { Text(pageTitle(page)) },
+							selected = pagerState.currentPage == index,
+							onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
+						)
+					}
 				}
-
 				Content(
-					Modifier.weight(1f),
+					modifier = Modifier.weight(1f),
 					contentPaddingValues = PaddingValues(
 						end = paddingValues.calculateEndPadding(LocalLayoutDirection.current),
 						bottom = paddingValues.calculateBottomPadding(),
 					),
-					pagerState,
-					externalRequests,
+					pagerState = pagerState,
+					visiblePages = visiblePages,
+					externalRequests = externalRequests,
 				)
 			}
 		} else {
-			Box(
-				modifier = Modifier
-					.fillMaxSize()
-			) {
+			Box(modifier = Modifier.fillMaxSize()) {
 				Content(
-					Modifier.fillMaxSize(),
+					modifier = Modifier.fillMaxSize(),
 					contentPaddingValues = paddingValues,
-					pagerState,
-					externalRequests,
+					pagerState = pagerState,
+					visiblePages = visiblePages,
+					externalRequests = externalRequests,
 				)
 			}
 		}
@@ -370,18 +207,19 @@ private fun Content(
 	modifier: Modifier,
 	contentPaddingValues: PaddingValues,
 	pagerState: PagerState,
+	visiblePages: List<ScreenPages>,
 	externalRequests: ExternalRequests,
 ) {
 	val stateHolder = rememberSaveableStateHolder()
 	HorizontalPager(
 		modifier = modifier,
 		state = pagerState,
-		key = { page -> page },
+		key = { page -> visiblePages.getOrNull(page)?.name ?: page },
 		beyondViewportPageCount = pagerState.pageCount,
 	) { page ->
-		stateHolder.SaveableStateProvider(key = page) {
+		stateHolder.SaveableStateProvider(key = visiblePages.getOrNull(page)?.name ?: page) {
 			PageContainer(
-				page = ScreenPages.fromOrdinal(page),
+				page = visiblePages.getOrNull(page) ?: ScreenPages.Fasting,
 				contentPaddingValues = contentPaddingValues,
 				externalRequests = externalRequests,
 			)
@@ -397,37 +235,22 @@ private fun PageContainer(
 	externalRequests: ExternalRequests,
 ) {
 	when (page) {
-		ScreenPages.Fasting -> {
-			FastingScreen(
-				contentPaddingValues = contentPaddingValues,
-				externalRequests = externalRequests,
-			)
-		}
-
-		ScreenPages.Log -> {
-			LogScreen(contentPaddingValues)
-		}
-
+		ScreenPages.Fasting -> FastingScreen(
+			contentPaddingValues = contentPaddingValues,
+			externalRequests = externalRequests,
+		)
+		ScreenPages.Log -> LogScreen(contentPaddingValues)
 		ScreenPages.Profile -> {
 			val context = LocalContext.current
 			ProfileScreen(
 				contentPaddingValues = contentPaddingValues,
 				onShowInfoDialog = { titleRes, contentRes ->
-					Utils.showInfoDialog(
-						titleRes,
-						contentRes,
-						context
-					)
-				}
+					Utils.showInfoDialog(titleRes, contentRes, context)
+				},
 			)
 		}
-
-		ScreenPages.Food -> {
-			FoodScreen(contentPaddingValues = contentPaddingValues)
-		}
-
-		ScreenPages.Schedule -> {
-			ScheduleScreen(contentPaddingValues = contentPaddingValues)
-		}
+		ScreenPages.Food -> FoodScreen(contentPaddingValues = contentPaddingValues)
+		ScreenPages.Schedule -> ScheduleScreen(contentPaddingValues = contentPaddingValues)
+		ScreenPages.Competition -> CompetitionScreen(contentPaddingValues = contentPaddingValues)
 	}
 }
