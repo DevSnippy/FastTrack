@@ -1,10 +1,9 @@
 package com.darkrockstudios.apps.fasttrack.data.competition
 
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
 import org.json.JSONObject
-import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
@@ -44,29 +43,38 @@ class PocketBaseService {
 
 	private suspend fun post(baseUrl: String, path: String, body: JSONObject, token: String? = null): JSONObject =
 		withContext(Dispatchers.IO) {
+			val bytes = body.toString().toByteArray(Charsets.UTF_8)
+			Napier.d("POST $baseUrl$path body=${body}")
 			val conn = (URL("$baseUrl$path").openConnection() as HttpURLConnection).apply {
 				requestMethod = "POST"
-				setRequestProperty("Content-Type", "application/json")
+				setRequestProperty("Content-Type", "application/json; charset=UTF-8")
+				setRequestProperty("Accept", "application/json")
 				token?.let { setRequestProperty("Authorization", it) }
 				doOutput = true
+				doInput = true
+				setFixedLengthStreamingMode(bytes.size)
 				connectTimeout = 10_000
 				readTimeout = 10_000
 			}
-			OutputStreamWriter(conn.outputStream).use { it.write(body.toString()) }
+			conn.outputStream.use { it.write(bytes) }
 			conn.readResponse()
 		}
 
 	private suspend fun patch(baseUrl: String, path: String, body: JSONObject, token: String): JSONObject =
 		withContext(Dispatchers.IO) {
+			val bytes = body.toString().toByteArray(Charsets.UTF_8)
 			val conn = (URL("$baseUrl$path").openConnection() as HttpURLConnection).apply {
 				requestMethod = "PATCH"
-				setRequestProperty("Content-Type", "application/json")
+				setRequestProperty("Content-Type", "application/json; charset=UTF-8")
+				setRequestProperty("Accept", "application/json")
 				setRequestProperty("Authorization", token)
 				doOutput = true
+				doInput = true
+				setFixedLengthStreamingMode(bytes.size)
 				connectTimeout = 10_000
 				readTimeout = 10_000
 			}
-			OutputStreamWriter(conn.outputStream).use { it.write(body.toString()) }
+			conn.outputStream.use { it.write(bytes) }
 			conn.readResponse()
 		}
 
@@ -78,6 +86,7 @@ class PocketBaseService {
 		} catch (e: Exception) {
 			""
 		}
+		Napier.d("PB response $code: $text")
 		disconnect()
 		if (code !in 200..299) {
 			val json = runCatching { JSONObject(text) }.getOrNull()
