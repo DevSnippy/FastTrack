@@ -12,6 +12,12 @@
 
     <!-- Settings -->
     <string name="settings_section_notifications">Notifications</string>
+    <string name="settings_section_online">Online &amp; Competition</string>
+    <string name="settings_online_sharing_title">Online Data Sharing</string>
+    <string name="settings_online_sharing_subtitle">Sync your fasting data for competition features. Requires internet access.</string>
+    <string name="settings_online_sharing_confirm_title">Enable Online Data Sharing?</string>
+    <string name="settings_online_sharing_confirm_body">This will allow the app to connect to the internet and sync your fasting and food data for competition features.\n\nYour data will be sent to the Fast Track server. You can turn this off at any time.</string>
+    <string name="settings_online_sharing_confirm_enable">Enable</string>
     <string name="settings_section_ui">Interface</string>
     <string name="settings_section_logbook">Logbook</string>
 

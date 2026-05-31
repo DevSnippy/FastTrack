@@ -94,4 +94,10 @@ class SettingsPreferencesDatasource(
 	override fun setLogViewMode(mode: LogViewMode) {
 		storage.edit { putString(Data.KEY_LOG_VIEW_MODE, mode.name) }
 	}
+
+	override fun getOnlineSharing(): Boolean = storage.getBoolean(Data.KEY_ONLINE_SHARING, false)
+
+	override fun setOnlineSharing(enabled: Boolean) {
+		storage.edit { putBoolean(Data.KEY_ONLINE_SHARING, enabled) }
+	}
 }

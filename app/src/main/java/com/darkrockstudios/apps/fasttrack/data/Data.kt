@@ -13,6 +13,7 @@ object Data
 	const val KEY_METRIC_SYSTEM = "metric_system"
 	const val KEY_THEME_MODE = "theme_mode"
 	const val KEY_LOG_VIEW_MODE = "log_view_mode"
+	const val KEY_ONLINE_SHARING = "online_sharing"
 
 	private const val CM_INCH_RATIO = 2.54
 	fun inchToCm(inches: Int): Double = inches.toDouble() * CM_INCH_RATIO

@@ -46,6 +46,7 @@ class SettingsActivity : AppCompatActivity() {
 	private var stageAlertsSettingState by mutableStateOf(false)
 	private var metricSystemSettingState by mutableStateOf(false)
 	private var themeModeState by mutableStateOf(ThemeMode.SYSTEM)
+	private var onlineSharingState by mutableStateOf(false)
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -57,6 +58,7 @@ class SettingsActivity : AppCompatActivity() {
 		stageAlertsSettingState = settings.getFastingAlerts()
 		metricSystemSettingState = settings.getUseMetricSystem(default = isMetricSystemLocale())
 		themeModeState = settings.getThemeMode()
+		onlineSharingState = settings.getOnlineSharing()
 		registerNotificationPermissionCallback()
 		registerImportCallback()
 
@@ -74,7 +76,9 @@ class SettingsActivity : AppCompatActivity() {
 					themeModeState = themeModeState,
 					onThemeModeChanged = { mode -> handleThemeModeChange(mode) },
 					onExportClick = { onExportLogBook() },
-					onImportClick = { onImportLogBook() }
+					onImportClick = { onImportLogBook() },
+					onlineSharingState = onlineSharingState,
+					onOnlineSharingChanged = { enabled -> handleOnlineSharingChange(enabled) },
 				)
 			}
 		}
@@ -157,6 +161,11 @@ class SettingsActivity : AppCompatActivity() {
 	private fun handleMetricSystemSettingChange(enabled: Boolean) {
 		settings.setUseMetricSystem(enabled)
 		metricSystemSettingState = enabled
+	}
+
+	private fun handleOnlineSharingChange(enabled: Boolean) {
+		settings.setOnlineSharing(enabled)
+		onlineSharingState = enabled
 	}
 
 	private fun handleThemeModeChange(mode: ThemeMode) {

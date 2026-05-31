@@ -32,7 +32,9 @@ fun SettingsScreen(
 	themeModeState: ThemeMode,
 	onThemeModeChanged: (ThemeMode) -> Unit,
 	onExportClick: () -> Unit,
-	onImportClick: () -> Unit
+	onImportClick: () -> Unit,
+	onlineSharingState: Boolean,
+	onOnlineSharingChanged: (Boolean) -> Unit,
 ) {
 	Scaffold(
 		topBar = {
@@ -66,7 +68,9 @@ fun SettingsScreen(
 			themeModeState = themeModeState,
 			onThemeModeChanged = onThemeModeChanged,
 			onExportClick = onExportClick,
-			onImportClick = onImportClick
+			onImportClick = onImportClick,
+			onlineSharingState = onlineSharingState,
+			onOnlineSharingChanged = onOnlineSharingChanged,
 		)
 	}
 }
@@ -84,7 +88,9 @@ private fun SettingsList(
 	themeModeState: ThemeMode,
 	onThemeModeChanged: (ThemeMode) -> Unit,
 	onExportClick: () -> Unit,
-	onImportClick: () -> Unit
+	onImportClick: () -> Unit,
+	onlineSharingState: Boolean,
+	onOnlineSharingChanged: (Boolean) -> Unit,
 ) {
 	var fancyBackground by remember { mutableStateOf(settings.getShowFancyBackground()) }
 
@@ -145,6 +151,15 @@ private fun SettingsList(
 				ThemeModeSettingsItem(
 					themeMode = themeModeState,
 					onThemeModeChanged = onThemeModeChanged
+				)
+			}
+			item(key = "online_header") {
+				SettingsSectionHeader(title = R.string.settings_section_online)
+			}
+			item(key = "online_sharing") {
+				OnlineSharingSettingsItem(
+					value = onlineSharingState,
+					onChange = onOnlineSharingChanged,
 				)
 			}
 			item(key = "logbook_header") {
@@ -270,6 +285,63 @@ private fun ThemeModeSettingsItem(
 				}
 			}
 		}
+	)
+}
+
+@Composable
+private fun OnlineSharingSettingsItem(
+	value: Boolean,
+	onChange: (Boolean) -> Unit,
+) {
+	var showConfirmDialog by remember { mutableStateOf(false) }
+
+	if (showConfirmDialog) {
+		AlertDialog(
+			onDismissRequest = { showConfirmDialog = false },
+			title = { Text(stringResource(R.string.settings_online_sharing_confirm_title)) },
+			text = { Text(stringResource(R.string.settings_online_sharing_confirm_body)) },
+			confirmButton = {
+				Button(onClick = {
+					onChange(true)
+					showConfirmDialog = false
+				}) {
+					Text(stringResource(R.string.settings_online_sharing_confirm_enable))
+				}
+			},
+			dismissButton = {
+				TextButton(onClick = { showConfirmDialog = false }) {
+					Text(stringResource(R.string.cancel_button))
+				}
+			},
+		)
+	}
+
+	ListItem(
+		headlineContent = {
+			Text(
+				text = stringResource(R.string.settings_online_sharing_title),
+				style = MaterialTheme.typography.labelLarge,
+				fontWeight = FontWeight.Bold,
+			)
+		},
+		supportingContent = {
+			Text(
+				text = stringResource(R.string.settings_online_sharing_subtitle),
+				style = MaterialTheme.typography.bodySmall,
+			)
+		},
+		trailingContent = {
+			Switch(
+				checked = value,
+				onCheckedChange = { enabled ->
+					if (enabled) {
+						showConfirmDialog = true
+					} else {
+						onChange(false)
+					}
+				},
+			)
+		},
 	)
 }
 

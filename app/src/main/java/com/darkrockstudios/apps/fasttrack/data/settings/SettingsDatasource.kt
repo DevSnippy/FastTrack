@@ -27,4 +27,7 @@ interface SettingsDatasource {
 
 	fun getLogViewMode(): LogViewMode
 	fun setLogViewMode(mode: LogViewMode)
+
+	fun getOnlineSharing(): Boolean
+	fun setOnlineSharing(enabled: Boolean)
 }

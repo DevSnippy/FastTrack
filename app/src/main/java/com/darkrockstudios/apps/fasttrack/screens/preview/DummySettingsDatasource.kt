@@ -43,4 +43,8 @@ class DummySettingsDatasource(
 	override fun getLogViewMode(): LogViewMode = LogViewMode.LIST
 
 	override fun setLogViewMode(mode: LogViewMode) {}
+
+	override fun getOnlineSharing(): Boolean = false
+
+	override fun setOnlineSharing(enabled: Boolean) {}
 }

@@ -13,6 +13,12 @@
 
     <!-- Settings -->
     <string name="settings_section_notifications">התראות</string>
+    <string name="settings_section_online">אונליין ותחרות</string>
+    <string name="settings_online_sharing_title">שיתוף נתונים אונליין</string>
+    <string name="settings_online_sharing_subtitle">סנכרן את נתוני הצום שלך לצורך תכונות תחרות. דורש גישה לאינטרנט.</string>
+    <string name="settings_online_sharing_confirm_title">להפעיל שיתוף נתונים אונליין?</string>
+    <string name="settings_online_sharing_confirm_body">זה יאפשר לאפליקציה להתחבר לאינטרנט ולסנכרן את נתוני הצום והאוכל שלך לצורך תכונות תחרות.\n\nהנתונים שלך יישלחו לשרת Fast Track. ניתן לכבות זאת בכל עת.</string>
+    <string name="settings_online_sharing_confirm_enable">הפעל</string>
     <string name="settings_section_ui">ממשק</string>
     <string name="settings_section_logbook">יומן</string>
 
